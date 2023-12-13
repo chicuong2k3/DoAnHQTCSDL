@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataModels.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231213132443_m10")]
-    partial class m10
+    [Migration("20231213162544_initmigration")]
+    partial class initmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,9 @@ namespace DataModels.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -74,23 +77,52 @@ namespace DataModels.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("AppUser");
 
                     b.HasData(
                         new
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c764f572-8a8d-4078-b936-50f1c884bde5",
+                            ConcurrencyStamp = "78e33993-579e-4d71-ae86-3cdf52f11372",
                             EmailConfirmed = false,
+                            IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN8VUxuQh75N5p2/IsApdnt67xUQ3k4P70PvlcY9wuih7P4xxsnDbaJDJqFw5DY9+A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGjHTCsGF6xOUVRCh0JPGqJ2imxe/1uGtUg6UdlJu7HVTpQj2DtYSI7Xb71My/C97Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "94320fc5-3ec8-41fd-bf86-1cf553352104",
+                            SecurityStamp = "873f2ab4-0eef-4645-b4c4-5efd0abeeec0",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
+                });
+
+            modelBuilder.Entity("DataModels.AppointmentSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AppointmentTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DentistId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DentistId");
+
+                    b.ToTable("AppointmentSchedules");
                 });
 
             modelBuilder.Entity("DataModels.Customer", b =>
@@ -175,6 +207,120 @@ namespace DataModels.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("DataModels.ExaminationSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DentistId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExaminationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DentistId");
+
+                    b.ToTable("ExaminationSchedules");
+                });
+
+            modelBuilder.Entity("DataModels.MedicalRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SequenceNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedByDentistId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExamDentistDentistId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExaminationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Service")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id", "SequenceNumber");
+
+                    b.HasIndex("CreatedByDentistId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ExamDentistDentistId");
+
+                    b.ToTable("MedicalRecords");
+                });
+
+            modelBuilder.Entity("DataModels.Medicine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InventoryQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Medicines");
+                });
+
+            modelBuilder.Entity("DataModels.Medicine_MedicalRecord", b =>
+                {
+                    b.Property<int>("MedicineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicalRecordId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SequenceNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicineQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Sold")
+                        .HasColumnType("bit");
+
+                    b.HasKey("MedicineId", "MedicalRecordId", "SequenceNumber");
+
+                    b.HasIndex("MedicalRecordId", "SequenceNumber");
+
+                    b.ToTable("Medicine_MedicalRecords");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -211,6 +357,12 @@ namespace DataModels.Migrations
                             Id = "39934cbd-ca9b-43a2-9028-192615dc638a",
                             Name = "Dentist",
                             NormalizedName = "DENTIST"
+                        },
+                        new
+                        {
+                            Id = "31234cbd-ca9b-45a2-9028-192615dc638a",
+                            Name = "Employee",
+                            NormalizedName = "EMPLOYEE"
                         });
                 });
 
@@ -278,6 +430,25 @@ namespace DataModels.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DataModels.AppointmentSchedule", b =>
+                {
+                    b.HasOne("DataModels.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataModels.Dentist", "Dentist")
+                        .WithMany()
+                        .HasForeignKey("DentistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Dentist");
+                });
+
             modelBuilder.Entity("DataModels.Customer", b =>
                 {
                     b.HasOne("DataModels.AppUser", "Account")
@@ -294,7 +465,7 @@ namespace DataModels.Migrations
                     b.HasOne("DataModels.AppUser", "Account")
                         .WithMany()
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -309,6 +480,71 @@ namespace DataModels.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("DataModels.ExaminationSchedule", b =>
+                {
+                    b.HasOne("DataModels.Dentist", "Dentist")
+                        .WithMany()
+                        .HasForeignKey("DentistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dentist");
+                });
+
+            modelBuilder.Entity("DataModels.MedicalRecord", b =>
+                {
+                    b.HasOne("DataModels.Dentist", "CreatedByDentist")
+                        .WithMany()
+                        .HasForeignKey("CreatedByDentistId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("DataModels.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataModels.Dentist", "ExamDentist")
+                        .WithMany()
+                        .HasForeignKey("ExamDentistDentistId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("CreatedByDentist");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ExamDentist");
+                });
+
+            modelBuilder.Entity("DataModels.Medicine_MedicalRecord", b =>
+                {
+                    b.HasOne("DataModels.Medicine", "Medicine")
+                        .WithMany("Medicine_MedicalRecords")
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataModels.MedicalRecord", "MedicalRecord")
+                        .WithMany("Medicine_MedicalRecords")
+                        .HasForeignKey("MedicalRecordId", "SequenceNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedicalRecord");
+
+                    b.Navigation("Medicine");
+                });
+
+            modelBuilder.Entity("DataModels.MedicalRecord", b =>
+                {
+                    b.Navigation("Medicine_MedicalRecords");
+                });
+
+            modelBuilder.Entity("DataModels.Medicine", b =>
+                {
+                    b.Navigation("Medicine_MedicalRecords");
                 });
 #pragma warning restore 612, 618
         }
