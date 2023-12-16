@@ -45,7 +45,7 @@ namespace DataModels
             builder.Entity<MedicalRecord>()
                 .HasOne(mr => mr.ExamDentist)
                 .WithMany()
-                .HasForeignKey(mr => mr.ExamDentistDentistId)
+                .HasForeignKey(mr => mr.ExamDentistId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Dentist>()

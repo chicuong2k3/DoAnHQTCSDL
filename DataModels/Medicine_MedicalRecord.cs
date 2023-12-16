@@ -8,6 +8,5 @@
         public MedicalRecord MedicalRecord { get; set; }
         public int SequenceNumber { get; set; }
         public int MedicineQuantity { get; set; }
-        public bool? Sold { get; set; }
     }
 }

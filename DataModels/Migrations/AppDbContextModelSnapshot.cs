@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d9d1bf6-6948-46c3-a94f-8e80ac3e0f49",
+                            ConcurrencyStamp = "8d83dc29-a643-415e-8a03-5d979c935e56",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAEESqnrUmD6uKRNRxh7Sb93KsItQUpSvPu4cNWyklzIoHIvX2SIQjHACWKgCEtWHytA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJVbDGfFc9fz07x1gTIijw4CSOpSP59c5FsyvNXh/+mBaMeq6DO3bZVZeOG3xScmqg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "93259658-2951-4880-be3d-9422ce2c80a0",
+                            SecurityStamp = "1a9eb9b8-5882-4aca-a72f-763d8aaee8ad",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -222,7 +222,7 @@ namespace DataModels.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ExamDentistDentistId")
+                    b.Property<string>("ExamDentistId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ExaminationDate")
@@ -238,7 +238,7 @@ namespace DataModels.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ExamDentistDentistId");
+                    b.HasIndex("ExamDentistId");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -285,9 +285,6 @@ namespace DataModels.Migrations
 
                     b.Property<int>("MedicineQuantity")
                         .HasColumnType("int");
-
-                    b.Property<bool?>("Sold")
-                        .HasColumnType("bit");
 
                     b.HasKey("MedicineId", "MedicalRecordId", "SequenceNumber");
 
@@ -472,7 +469,7 @@ namespace DataModels.Migrations
 
                     b.HasOne("DataModels.Dentist", "ExamDentist")
                         .WithMany()
-                        .HasForeignKey("ExamDentistDentistId")
+                        .HasForeignKey("ExamDentistId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("CreatedByDentist");

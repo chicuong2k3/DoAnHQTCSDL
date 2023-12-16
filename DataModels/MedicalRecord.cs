@@ -18,7 +18,7 @@ namespace DataModels
         public string? CreatedByDentistId { get; set; }
         public Dentist? ExamDentist { get; set; }
         [ForeignKey(nameof(ExamDentist))]
-        public string? ExamDentistDentistId { get; set; }
+        public string? ExamDentistId { get; set; }
         public ICollection<Medicine_MedicalRecord> Medicine_MedicalRecords { get; set; }
     }
 }
