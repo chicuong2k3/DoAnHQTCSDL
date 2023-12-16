@@ -9,6 +9,7 @@ namespace DataModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime AppointmentTime { get; set; }
+        public bool IsAvailable { get; set; }
         public Dentist Dentist { get; set; }
         [ForeignKey(nameof(Dentist))]   
         public string DentistId { get; set; }

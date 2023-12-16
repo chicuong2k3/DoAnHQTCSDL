@@ -1,5 +1,6 @@
 ﻿
 using DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Repositories;
@@ -12,16 +13,22 @@ namespace WebApplication.Controllers
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
         private readonly CustomerRepository customerRepository;
+		private readonly DentistRepository dentistRepository;
+		private readonly EmployeeRepository employeeRepository;
 
-        public AccountController(
+		public AccountController(
             UserManager<AppUser> userManager, 
             SignInManager<AppUser> signInManager,
-            CustomerRepository customerRepository)
+            CustomerRepository customerRepository,
+            DentistRepository dentistRepository,
+            EmployeeRepository employeeRepository)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.customerRepository = customerRepository;
-        }
+			this.dentistRepository = dentistRepository;
+			this.employeeRepository = employeeRepository;
+		}
         public IActionResult Register()
         {
             return View();
@@ -123,6 +130,57 @@ namespace WebApplication.Controllers
 
         public IActionResult AccessDenied()
         {
+            return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditProfile(string username)
+        {
+            var user = await userManager.FindByNameAsync(username);
+            Customer customer;
+            Dentist dentist;
+            Employee employee;
+            EditProfileModel editProfile;
+
+			if (await userManager.IsInRoleAsync(user, "Customer"))
+            {
+                customer = await customerRepository.GetCustomerByAccountAsync(user);
+                editProfile = new EditProfileModel()
+				{
+					PhoneNumber = customer.PhoneNumber,
+                    FullName = customer.FullName,
+                    DayOfBirth = customer.DayOfBirth,
+                    Address = customer.Address
+				};
+				return View(editProfile);
+			}
+			else if (await userManager.IsInRoleAsync(user, "Dentist"))
+			{
+				dentist = await dentistRepository.GetDentistByAccountAsync(user);
+				editProfile = new EditProfileModel()
+				{
+					PhoneNumber = dentist.PhoneNumber,
+					FullName = dentist.FullName
+				};
+				return View(editProfile);
+			}
+            else if (await userManager.IsInRoleAsync(user, "Employee"))
+            {
+                employee = await employeeRepository.GetEmployeeByAccountAsync(user);
+                editProfile = new EditProfileModel()
+                {
+                    PhoneNumber = employee.PhoneNumber,
+                    FullName = employee.FullName
+                };
+                return View(editProfile);
+            }
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EditProfile(EditProfileModel model)
+        {
+
             return View();
         }
     }

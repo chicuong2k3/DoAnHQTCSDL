@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories
 {
@@ -15,5 +16,11 @@ namespace Repositories
             await dbContext.Customers.AddAsync(customer);
             await dbContext.SaveChangesAsync();
         }
-    }
+
+		public async Task<Customer> GetCustomerByAccountAsync(AppUser user)
+		{
+
+            return await dbContext.Customers.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();
+		}
+	}
 }

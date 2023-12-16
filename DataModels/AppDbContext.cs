@@ -122,7 +122,6 @@ namespace DataModels
         public DbSet<Dentist> Dentists { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<AppointmentSchedule> AppointmentSchedules { get; set; }
-        public DbSet<ExaminationSchedule> ExaminationSchedules { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<Medicine_MedicalRecord> Medicine_MedicalRecords { get; set; }

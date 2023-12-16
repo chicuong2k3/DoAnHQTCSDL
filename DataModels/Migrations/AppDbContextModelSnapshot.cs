@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "78e33993-579e-4d71-ae86-3cdf52f11372",
+                            ConcurrencyStamp = "8d9d1bf6-6948-46c3-a94f-8e80ac3e0f49",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGjHTCsGF6xOUVRCh0JPGqJ2imxe/1uGtUg6UdlJu7HVTpQj2DtYSI7Xb71My/C97Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEESqnrUmD6uKRNRxh7Sb93KsItQUpSvPu4cNWyklzIoHIvX2SIQjHACWKgCEtWHytA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "873f2ab4-0eef-4645-b4c4-5efd0abeeec0",
+                            SecurityStamp = "93259658-2951-4880-be3d-9422ce2c80a0",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -112,6 +112,9 @@ namespace DataModels.Migrations
                     b.Property<string>("DentistId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -202,31 +205,6 @@ namespace DataModels.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("DataModels.ExaminationSchedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DentistId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("ExaminationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DentistId");
-
-                    b.ToTable("ExaminationSchedules");
                 });
 
             modelBuilder.Entity("DataModels.MedicalRecord", b =>
@@ -477,17 +455,6 @@ namespace DataModels.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("DataModels.ExaminationSchedule", b =>
-                {
-                    b.HasOne("DataModels.Dentist", "Dentist")
-                        .WithMany()
-                        .HasForeignKey("DentistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dentist");
                 });
 
             modelBuilder.Entity("DataModels.MedicalRecord", b =>
