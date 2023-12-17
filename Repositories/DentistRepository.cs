@@ -17,7 +17,12 @@ namespace Repositories
             await dbContext.Dentists.AddAsync(dentist);
             await dbContext.SaveChangesAsync();
         }
-		public async Task<Dentist> GetDentistByAccountAsync(AppUser user)
+        public async Task UpdateDentistAsync(Dentist dentist)
+        {
+            dbContext.Dentists.Update(dentist);
+            await dbContext.SaveChangesAsync();
+        }
+        public async Task<Dentist> GetDentistByAccountAsync(AppUser user)
 		{
 			return await dbContext.Dentists.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();
 		}

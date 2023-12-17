@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
+using System.Data;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
@@ -31,7 +32,16 @@ namespace WebApplication.Controllers
         #region Features concerning user
         public async Task<IActionResult> ListUsers()
         {
-            var userList = await userManager.Users.ToListAsync();
+            var users = await userManager.Users.ToListAsync();
+            List<AppUser> userList = new List<AppUser>();
+            foreach (var user in users)
+            {
+                if (!(await userManager.IsInRoleAsync(user, "Customer"))
+                    && !(await userManager.IsInRoleAsync(user, "Admin")))
+                {
+                    userList.Add(user);
+                }
+            }
             return View(userList);
         }
         public IActionResult CreateUser()
@@ -109,19 +119,32 @@ namespace WebApplication.Controllers
             var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return View("");
+                return View();
             }
-            
-
             var roles = await userManager.GetRolesAsync(user);
-
-            var model = new EditUserModel()
+            EditUserModel model = null;
+            if (await userManager.IsInRoleAsync(user, "Dentist"))
             {
-                Id = user.Id,
-                UserName = user.UserName,
-                Roles = roles
-            };
-
+                Dentist dentist = await dentistRepository.GetDentistByAccountAsync(user);
+                model = new EditUserModel()
+                {
+                    Id = dentist.Id,
+                    UserName = user.UserName,
+                    PhoneNumber = dentist.PhoneNumber,
+                    Roles = roles
+                };
+            }
+            else if (await userManager.IsInRoleAsync(user, "Employee"))
+            {
+                Employee employee = await employeeRepository.GetEmployeeByAccountAsync(user);
+                model = new EditUserModel()
+                {
+                    Id = employee.Id,
+                    UserName = user.UserName,
+                    PhoneNumber = employee.PhoneNumber,
+                    Roles = roles
+                };
+            }
             return View(model);
         }
 
@@ -137,6 +160,22 @@ namespace WebApplication.Controllers
                     ModelState.AddModelError(string.Empty, $"Role with Id = {model.Id} is not exist");
                     return View("Error");
                 }
+
+                // Update phone number
+                if (await userManager.IsInRoleAsync(user, "Dentist"))
+                {
+                    Dentist dentist = await dentistRepository.GetDentistByAccountAsync(user);
+                    dentist.PhoneNumber = model.PhoneNumber;
+                    await dentistRepository.UpdateDentistAsync(dentist);
+                }
+                else if (await userManager.IsInRoleAsync(user, "Employee"))
+                {
+                    Employee employee = await employeeRepository.GetEmployeeByAccountAsync(user);
+                    employee.PhoneNumber = model.PhoneNumber;
+                    await employeeRepository.UpdateEmployeeAsync(employee);
+                }
+
+
                 user.UserName = model.UserName;
                 
                 var result = await userManager.UpdateAsync(user);

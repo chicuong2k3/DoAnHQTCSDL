@@ -8,8 +8,10 @@ namespace WebApplication.Models
         [Required]
         public string Id { get; set; }
         [Display(Name = "User Name")]
-		[Remote(action: "IsAccountAvailable", controller: "Account")]
+		
 		public string UserName { get; set; }
-		public IList<string>? Roles { get; set; }
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+        public IList<string>? Roles { get; set; }
 	}
 }

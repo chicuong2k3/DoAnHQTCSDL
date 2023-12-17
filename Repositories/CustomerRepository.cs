@@ -17,7 +17,13 @@ namespace Repositories
             await dbContext.SaveChangesAsync();
         }
 
-		public async Task<Customer> GetCustomerByAccountAsync(AppUser user)
+        public async Task UpdateCustomerAsync(Customer customer)
+        {
+            dbContext.Customers.Update(customer);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Customer> GetCustomerByAccountAsync(AppUser user)
 		{
 
             return await dbContext.Customers.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();

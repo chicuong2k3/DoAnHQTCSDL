@@ -17,7 +17,12 @@ namespace Repositories
             await dbContext.Employees.AddAsync(employee);
             await dbContext.SaveChangesAsync();
         }
-		public async Task<Employee> GetEmployeeByAccountAsync(AppUser user)
+        public async Task UpdateEmployeeAsync(Employee employee)
+        {
+            dbContext.Employees.Update(employee);
+            await dbContext.SaveChangesAsync();
+        }
+        public async Task<Employee> GetEmployeeByAccountAsync(AppUser user)
 		{
 			return await dbContext.Employees.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();
 		}

@@ -123,7 +123,6 @@
 						</a>
 						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
 							<a class="dropdown-item" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name"><i class="dw dw-user1"></i>Profile</a>
-							<a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i>Setting</a>
 							<form asp-controller="Account" asp-action="Logout" method="post">
 								<button type="submit" class="dropdown-item"><i class="dw dw-logout"></i>Log Out</button>
 							</form>
@@ -252,11 +251,7 @@
 					</li>
 					@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 					{
-						<li class="dropdown">
-							<a asp-controller="Administration" asp-action="ListRole" class="dropdown-toggle no-arrow">
-								<span class="micon dw dw-house-1"></span><span class="mtext">Role Manager</span>
-							</a>
-						</li>
+						
 						<li class="dropdown">
 							<a asp-controller="Administration" asp-action="ListUsers" class="dropdown-toggle no-arrow">
 								<span class="micon dw dw-house-1"></span><span class="mtext">User Manager</span>
