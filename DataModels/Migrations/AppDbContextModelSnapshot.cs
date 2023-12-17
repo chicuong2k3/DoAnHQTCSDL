@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d83dc29-a643-415e-8a03-5d979c935e56",
+                            ConcurrencyStamp = "f085633d-9771-49f4-bb0b-45b29f5921c1",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJVbDGfFc9fz07x1gTIijw4CSOpSP59c5FsyvNXh/+mBaMeq6DO3bZVZeOG3xScmqg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECGEt0QsO+5jXCMwQ+E/VT9Qtx+ZVA+f+syXQM+JsizUv/q0XbN+kjLn7UsRmEouJQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1a9eb9b8-5882-4aca-a72f-763d8aaee8ad",
+                            SecurityStamp = "ab41461b-6fc4-4379-bcbb-5770746618ff",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -251,12 +251,6 @@ namespace DataModels.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("InventoryQuantity")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -264,12 +258,36 @@ namespace DataModels.Migrations
                     b.Property<string>("Prescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.HasKey("Id");
+
+                    b.ToTable("Medicines");
+                });
+
+            modelBuilder.Entity("DataModels.MedicineInventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InventoryQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicineId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Medicines");
+                    b.HasIndex("MedicineId");
+
+                    b.ToTable("MedicineInventories");
                 });
 
             modelBuilder.Entity("DataModels.Medicine_MedicalRecord", b =>
@@ -477,6 +495,17 @@ namespace DataModels.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("ExamDentist");
+                });
+
+            modelBuilder.Entity("DataModels.MedicineInventory", b =>
+                {
+                    b.HasOne("DataModels.Medicine", "Medicine")
+                        .WithMany()
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medicine");
                 });
 
             modelBuilder.Entity("DataModels.Medicine_MedicalRecord", b =>

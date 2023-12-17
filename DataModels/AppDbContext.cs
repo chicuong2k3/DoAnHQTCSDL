@@ -124,6 +124,7 @@ namespace DataModels
         public DbSet<AppointmentSchedule> AppointmentSchedules { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<MedicineInventory> MedicineInventories { get; set; }
         public DbSet<Medicine_MedicalRecord> Medicine_MedicalRecords { get; set; }
     }
 }
