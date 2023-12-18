@@ -33,14 +33,35 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> ListUsers()
         {
             var users = await userManager.Users.ToListAsync();
-            List<AppUser> userList = new List<AppUser>();
+            List<ListUsersModel> userList = new List<ListUsersModel>();
             foreach (var user in users)
             {
                 if (!(await userManager.IsInRoleAsync(user, "Customer"))
                     && !(await userManager.IsInRoleAsync(user, "Admin")))
                 {
-                    userList.Add(user);
-                }
+                    ListUsersModel model = new ListUsersModel()
+                    {
+                        Id = user.Id,
+                        UserName = user.UserName,
+                        IsLocked = user.IsLocked
+                    };
+                   
+                    if (await userManager.IsInRoleAsync(user, "Dentist"))
+                    {
+                        var dentist = await dentistRepository.GetDentistByAccountAsync(user);
+						model.FullName = dentist.FullName;
+						model.PhoneNumber = dentist.PhoneNumber;
+                        model.Role = "Dentist";
+                    }
+                    else if (await userManager.IsInRoleAsync(user, "Employee"))
+					{
+						var employee = await employeeRepository.GetEmployeeByAccountAsync(user);
+						model.FullName = employee.FullName;
+						model.PhoneNumber = employee.PhoneNumber;
+						model.Role = "Employee";
+					}
+                    userList.Add(model);
+				}
             }
             return View(userList);
         }
@@ -131,7 +152,7 @@ namespace WebApplication.Controllers
                     Id = dentist.Id,
                     UserName = user.UserName,
                     PhoneNumber = dentist.PhoneNumber,
-                    Roles = roles
+                    FullName = dentist.FullName
                 };
             }
             else if (await userManager.IsInRoleAsync(user, "Employee"))
@@ -142,8 +163,8 @@ namespace WebApplication.Controllers
                     Id = employee.Id,
                     UserName = user.UserName,
                     PhoneNumber = employee.PhoneNumber,
-                    Roles = roles
-                };
+					FullName = employee.FullName
+				};
             }
             return View(model);
         }
@@ -166,12 +187,14 @@ namespace WebApplication.Controllers
                 {
                     Dentist dentist = await dentistRepository.GetDentistByAccountAsync(user);
                     dentist.PhoneNumber = model.PhoneNumber;
+                    dentist.FullName = model.FullName;
                     await dentistRepository.UpdateDentistAsync(dentist);
                 }
                 else if (await userManager.IsInRoleAsync(user, "Employee"))
                 {
                     Employee employee = await employeeRepository.GetEmployeeByAccountAsync(user);
                     employee.PhoneNumber = model.PhoneNumber;
+                    employee.FullName = model.FullName;
                     await employeeRepository.UpdateEmployeeAsync(employee);
                 }
 
@@ -199,94 +222,51 @@ namespace WebApplication.Controllers
 			{
 				return NotFound("Some errors occur");
 			}
-            try
+            
+
+            if (await userManager.IsInRoleAsync(user, "Dentist"))
             {
-				var result = await userManager.DeleteAsync(user);
-				if (result.Succeeded)
-				{
-					return Ok("Deleted successfully");
-				}
-				foreach (var error in result.Errors)
-				{
-					ModelState.AddModelError(string.Empty, error.Description);
-				}
-				return BadRequest("Some errors occur");
-			}
-            catch (DbUpdateException ex)
-            {
-				return BadRequest("User cannot be deleted because this user has some roles");
-			}
-		}
-
-		public async Task<IActionResult> EditRolesInUser(string userId)
-		{
-			var user = await userManager.FindByIdAsync(userId);
-			if (user == null)
-			{
-				ViewData["ErrorMessage"] = $"User with Id {userId} is not found";
-				return View();
-			}
-
-			ViewData["UserId"] = user.Id;
-			ViewData["UserName"] = user.UserName;
-
-			var model = new List<RoleUserModel>();
-
-			foreach (var role in await roleManager.Roles.ToListAsync())
-			{
-				var roleUserModel = new RoleUserModel()
-				{
-					RoleId = role.Id,
-					RoleName = role.Name
-				};
-
-				if (await userManager.IsInRoleAsync(user, role.Name))
-				{
-					roleUserModel.IsSelected = true;
-				}
-				else
-				{
-					roleUserModel.IsSelected = false;
-				}
-
-				model.Add(roleUserModel);
-			}
-			return View(model);
-
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> EditRolesInUser(List<RoleUserModel> model, string userId)
-		{
-			if (ModelState.IsValid)
-			{
-				var user = await userManager.FindByIdAsync(userId);
-				if (user == null)
-				{
-					ViewData["ErrorMessage"] = $"User with Id {userId} is not found";
-					return View();
-				}
-
-                var roles = await userManager.GetRolesAsync(user);
-                var result = await userManager.RemoveFromRolesAsync(user, roles);
-                if (result.Succeeded)
-                {
-                    var roleList = model.Where(x => x.IsSelected).Select(r => r.RoleName).ToList();
-                    if (roleList.Any())
-                    {
-                        result = await userManager.AddToRolesAsync(user, roleList);
-                        if (result.Succeeded)
-                        {
-                            return RedirectToAction("EditUser", new { id = userId });
-                        }
-                    }
-                    
-                }
-                ModelState.AddModelError("", "Cannot add or remove existing roles");
+                Dentist dentist = await dentistRepository.GetDentistByAccountAsync(user);
+                await dentistRepository.DeleteDentistAsync(dentist);
             }
-			return View(model);
+            else if (await userManager.IsInRoleAsync(user, "Employee"))
+            {
+                Employee employee = await employeeRepository.GetEmployeeByAccountAsync(user);
+                await employeeRepository.DeleteEmployeeAsync(employee);
+            }
 
-		}
+            var result = await userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok("Deleted successfully");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return BadRequest("Some errors occur");
+
+
+        }
+
+        [HttpPost]
+		public async Task<IActionResult> LockOrUnlockUser(string id, bool active)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+            if (active)
+            {
+                user.IsLocked = false;
+            }
+            else
+            {
+                user.IsLocked = true;
+            }
+            await userManager.UpdateAsync(user);
+            return Ok();
+        }
+
 		#endregion
 	}
 }

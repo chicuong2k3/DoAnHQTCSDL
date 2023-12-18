@@ -22,6 +22,12 @@ namespace Repositories
             dbContext.Dentists.Update(dentist);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteDentistAsync(Dentist dentist)
+        {
+            dbContext.Dentists.Remove(dentist);
+            await dbContext.SaveChangesAsync();
+        }
         public async Task<Dentist> GetDentistByAccountAsync(AppUser user)
 		{
 			return await dbContext.Dentists.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();

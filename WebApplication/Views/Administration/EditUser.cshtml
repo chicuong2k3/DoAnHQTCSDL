@@ -22,6 +22,11 @@
                         <input class="form-control" asp-for="PhoneNumber">
                         <span class="form-control-feedback text-danger" asp-validation-for="PhoneNumber"></span>
                     </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="FullName"></label>
+                        <input class="form-control" asp-for="FullName">
+                        <span class="form-control-feedback text-danger" asp-validation-for="FullName"></span>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-6">
                             <button type="submit" class="btn btn-success btn-block btn-rounded">
@@ -39,40 +44,5 @@
         </div>
     </div>
 </div>
-
-<div class="row">
-    <a class="btn btn-success my-3" asp-action="EditRolesInUser" asp-route-userId="@Model.Id">Manage Roles</a>
-</div>
-<div class="row">
-
-    
-                @if (Model.Roles.Any())
-                {
-
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Role Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var role in Model.Roles)
-                    {
-                        <tr>
-                            <td>@role</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-                }
-                else
-                {
-                    <h5>This user has no role</h5>
-                }
-            
-</div>
-
 
 

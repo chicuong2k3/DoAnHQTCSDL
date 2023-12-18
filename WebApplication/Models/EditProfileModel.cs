@@ -9,9 +9,11 @@ namespace WebApplication.Models
         [BindNever]
         [ValidateNever]
         public string Id { get; set; }
+        [Display(Name = "Full Name")]
         public string? FullName { get; set; }
         public string? Address { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "Date of Birth")]
         public DateTime? DayOfBirth { get; set; }
     }
 }

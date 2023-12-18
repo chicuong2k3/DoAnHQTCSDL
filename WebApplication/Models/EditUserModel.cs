@@ -12,6 +12,8 @@ namespace WebApplication.Models
 		public string UserName { get; set; }
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
-        public IList<string>? Roles { get; set; }
-	}
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+        public bool IsLocked { get; set; }
+    }
 }
