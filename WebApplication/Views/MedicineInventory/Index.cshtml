@@ -1,4 +1,6 @@
-﻿@model IEnumerable<MedicineInventoryModel>
+
+
+@model IEnumerable<MedicineInventoryModel>
 
 
 <div class="card-box mb-30">
@@ -23,7 +25,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var item in Model)
+				@foreach(var item in Model)
 				{
 					<tr>
 						<td class="table-plus">@item.Id</td>
