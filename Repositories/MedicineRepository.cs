@@ -54,5 +54,6 @@ namespace Repositories
             await dbContext.Medicines.AddAsync(model);
             await dbContext.SaveChangesAsync();
         }
+
     }
 }

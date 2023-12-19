@@ -9,7 +9,7 @@ namespace WebApplication.Congif
         public ConfigAutoMapper()
         {
             CreateMap<Medicine, CreateMedicineModel>().ReverseMap();
-
+            CreateMap<MedicineInventory, MedicineInventoryModel>().ReverseMap();
         }
     }
 }

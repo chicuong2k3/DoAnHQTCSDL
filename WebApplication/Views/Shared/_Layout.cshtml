@@ -109,6 +109,11 @@
 									<span class="micon dw dw-house-1"></span><span class="mtext">Medicine Manager</span>
 								</a>
 							</li>
+							<li class="dropdown">
+								<a asp-controller="MedicineInventory" asp-action="Index" class="dropdown-toggle no-arrow">
+									<span class="micon dw dw-house-1"></span><span class="mtext">Medicine_Inventory	 Manager</span>
+								</a>
+							</li>
 						}
 						else if (User.IsInRole("Customer"))
 						{
