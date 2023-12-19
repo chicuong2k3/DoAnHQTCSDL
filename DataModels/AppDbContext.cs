@@ -6,10 +6,10 @@ using Bogus;
 namespace DataModels
 {
     public class AppDbContext : IdentityDbContext<AppUser>
-	{
+    {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -27,7 +27,7 @@ namespace DataModels
             builder.Entity<Medicine_MedicalRecord>()
                 .HasOne(m => m.MedicalRecord)
                 .WithMany(mmr => mmr.Medicine_MedicalRecords)
-                .HasForeignKey(mmr => new { mmr.MedicalRecordId, mmr.SequenceNumber});
+                .HasForeignKey(mmr => new { mmr.MedicalRecordId, mmr.SequenceNumber });
 
             //
             builder.Entity<MedicalRecord>()
@@ -65,7 +65,7 @@ namespace DataModels
                 entity.HasKey(r => new { r.UserId, r.RoleId });
             });
 
-            
+
             builder.Ignore<IdentityUserToken<string>>();
             builder.Ignore<IdentityUserLogin<string>>();
 
@@ -75,10 +75,10 @@ namespace DataModels
             string employeeRoleId = "31234cbd-ca9b-45a2-9028-192615dc638a";
             string adminId = "c6647262-ef40-40b3-af33-f89f80d35378";
 
-            builder.Entity<IdentityRole>().HasData(new IdentityRole 
-            { 
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
                 Id = adminRoleId,
-                Name = "Admin", 
+                Name = "Admin",
                 NormalizedName = "ADMIN"
             });
             builder.Entity<IdentityRole>().HasData(new IdentityRole
@@ -115,13 +115,13 @@ namespace DataModels
             builder.Entity<IdentityUserRole<string>>().HasData(
             new IdentityUserRole<string>
             {
-                
+
                 RoleId = adminRoleId,
                 UserId = adminId
             });
 
             Randomizer.Seed = new Random(8675390);
-            
+
         }
 
 

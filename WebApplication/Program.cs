@@ -19,22 +19,22 @@ namespace WebApplication
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"),
                     x => x.UseDateOnlyTimeOnly());
             });
 
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
-				options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 2;
-			})
+            })
             .AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/Register";
+                options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
 
