@@ -5,9 +5,6 @@ namespace DataModels
 {
     public class AppointmentSchedule
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public DateTime AppointmentTime { get; set; }
         public bool IsAvailable { get; set; }
         public Dentist Dentist { get; set; }

@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f085633d-9771-49f4-bb0b-45b29f5921c1",
+                            ConcurrencyStamp = "08ee077a-e718-42d6-98fe-3097d8db0692",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAECGEt0QsO+5jXCMwQ+E/VT9Qtx+ZVA+f+syXQM+JsizUv/q0XbN+kjLn7UsRmEouJQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENVhsx1lQSvMwTZdRqeeQbuG9PQIjdr6s8qyWrQedPqkE1Kq/0mY+9Lx3gDjVuntHA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ab41461b-6fc4-4379-bcbb-5770746618ff",
+                            SecurityStamp = "7eaaf254-b224-4a07-ba2a-26cacd3c4b56",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -96,11 +96,8 @@ namespace DataModels.Migrations
 
             modelBuilder.Entity("DataModels.AppointmentSchedule", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("DentistId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("AppointmentTime")
                         .HasColumnType("datetime2");
@@ -109,18 +106,12 @@ namespace DataModels.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DentistId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("DentistId", "AppointmentTime");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("DentistId");
 
                     b.ToTable("AppointmentSchedules");
                 });

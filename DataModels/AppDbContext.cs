@@ -13,6 +13,9 @@ namespace DataModels
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //key for AppointmentSchedule
+            builder.Entity<AppointmentSchedule>()
+                .HasKey(x => new { x.DentistId, x.AppointmentTime });
             // n-n relationship
             builder.Entity<Medicine_MedicalRecord>()
                 .HasKey(x => new { x.MedicineId, x.MedicalRecordId, x.SequenceNumber });
@@ -116,6 +119,8 @@ namespace DataModels
                 UserId = adminId
             });
         }
+
+
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Dentist> Dentists { get; set; }
