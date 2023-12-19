@@ -84,7 +84,7 @@ namespace WebApplication.Controllers
                 var result = await signInManager.PasswordSignInAsync(model.UserName, 
                     model.Password, 
                     model.RememberMe, 
-                    lockoutOnFailure: true);
+                    lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {

@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "49bf8fb6-e70b-4838-b2df-aed7339cdf16",
+                            ConcurrencyStamp = "61689655-4448-41c9-be53-b2c1f2a38cdc",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6O3OglT1kbpy9QtR6/7fq3kTW+YC+ytt7MOikeFpb0cVm3fAZ2d4f2vzY81WQIaQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPC3Vr+iM4mAcaT4qAGjkQZMubKIGC3o5Hk9VwLICZHIfk9jJxY79TXjuUKHuRbEpw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b51b36a3-130c-41b5-907f-e995b74ff574",
+                            SecurityStamp = "6b4f50e6-a48b-43c2-9550-4e2798dec3e4",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -99,17 +99,17 @@ namespace DataModels.Migrations
                     b.Property<string>("DentistId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly>("AppointmentTime")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasKey("DentistId", "AppointmentTime");
+                    b.HasKey("DentistId", "StartTime");
 
                     b.HasIndex("CustomerId");
 

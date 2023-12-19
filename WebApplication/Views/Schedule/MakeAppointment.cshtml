@@ -1,0 +1,76 @@
+﻿@model CreateAppointmentModel
+
+@{
+    ViewData["Title"] = "Make an Appointment";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Make an Appointment</h4>
+                <div class="text-danger" asp-validation-summary="All"></div>
+                <form method="post">
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="StartTime"></label>
+                        <input class="form-control" asp-for="StartTime">
+                        <span class="form-control-feedback text-danger" asp-validation-for="StartTime"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="Duration"></label>
+                        <input class="form-control" asp-for="Duration">
+                        <span class="form-control-feedback text-danger" asp-validation-for="Duration"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="DentistId"></label>
+                        <select id="DentistList" class="form-control" asp-for="DentistId">
+                                
+                        </select>
+                    </div>
+                    <input class="form-control" type="hidden" asp-for="CustomerId" value="@(ViewData["CustomerId"] as string)">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-success btn-block btn-rounded">
+                                Save
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <a asp-controller="Home" asp-action="Index" type="button" class="btn btn-danger btn-block btn-rounded">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            let startTimeInput = $('#StartTime');
+            let duration = $('#Duration');
+            startTimeInput.on('change', function () {
+                duration.on('change', function () {
+                    $.ajax({
+                        url: '@Url.Action("GetAvailableDentists", "Schedule")',
+                        type: 'GET',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: { startTime: startTimeInput.val(), duration: duration.val() },
+                        success: function (data) {
+                            data.forEach(x => {
+                                $('#DentistList').append($('<option></option>')
+                                    .attr("value", x.id).text(x.fullName));
+                            });
+                        },
+                        error: function (error) {
+                            toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
+                        }
+                    });
+                });
+            });
+            
+        });
+    </script>
+}                               

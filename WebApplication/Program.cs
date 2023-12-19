@@ -39,6 +39,7 @@ namespace WebApplication
             builder.Services.AddScoped<CustomerRepository>();
             builder.Services.AddScoped<DentistRepository>();
             builder.Services.AddScoped<EmployeeRepository>();
+            builder.Services.AddScoped<AppointmentScheduleRepository>();
 
             var app = builder.Build();
 

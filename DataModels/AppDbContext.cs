@@ -15,7 +15,7 @@ namespace DataModels
         {
             //key for AppointmentSchedule
             builder.Entity<AppointmentSchedule>()
-                .HasKey(x => new { x.DentistId, x.AppointmentTime });
+                .HasKey(x => new { x.DentistId, x.StartTime });
             // n-n relationship
             builder.Entity<Medicine_MedicalRecord>()
                 .HasKey(x => new { x.MedicineId, x.MedicalRecordId, x.SequenceNumber });

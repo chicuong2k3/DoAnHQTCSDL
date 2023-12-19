@@ -1,6 +1,7 @@
 ﻿@using DataModels
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 <!DOCTYPE html>
 <html>
@@ -93,19 +94,33 @@
 							<span class="micon dw dw-house-1"></span><span class="mtext">Home</span>
 						</a>
 					</li>
-					@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+					@if (SignInManager.IsSignedIn(User))
 					{
 						
-						<li class="dropdown">
-							<a asp-controller="Administration" asp-action="ListUsers" class="dropdown-toggle no-arrow">
-								<span class="micon dw dw-house-1"></span><span class="mtext">User Manager</span>
-							</a>
-						</li>
-						<li class="dropdown">
-							<a asp-controller="Medicine" asp-action="Index" class="dropdown-toggle no-arrow">
-								<span class="micon dw dw-house-1"></span><span class="mtext">Medicine Manager</span>
-							</a>
-						</li>
+						if (User.IsInRole("Admin"))
+						{
+							<li class="dropdown">
+								<a asp-controller="Administration" asp-action="ListUsers" class="dropdown-toggle no-arrow">
+									<span class="micon dw dw-house-1"></span><span class="mtext">User Manager</span>
+								</a>
+							</li>
+							<li class="dropdown">
+								<a asp-controller="Medicine" asp-action="Index" class="dropdown-toggle no-arrow">
+									<span class="micon dw dw-house-1"></span><span class="mtext">Medicine Manager</span>
+								</a>
+							</li>
+						}
+						else if (User.IsInRole("Customer"))
+						{
+							var customer = await UserManager.GetUserAsync(User);
+							var customerId = customer.Id;
+							<li class="dropdown">
+								<a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" class="dropdown-toggle no-arrow">
+									<span class="micon dw dw-house-1"></span><span class="mtext">Đặt lịch hẹn</span>
+								</a>
+							</li>
+							
+						}
 					}
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">

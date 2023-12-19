@@ -1,6 +1,5 @@
 ﻿using DataModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Repositories
 {
@@ -11,6 +10,11 @@ namespace Repositories
         public DentistRepository(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task<List<Dentist>> GetAllAsync()
+        {
+            return await dbContext.Dentists.ToListAsync();
         }
         public async Task AddDentistAsync(Dentist dentist)
         {
