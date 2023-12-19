@@ -47,77 +47,8 @@
                 Trang chủ
             </a>
 
-            <<<<<<< HEAD
             @if (SignInManager.IsSignedIn(User))
             {
-                <div class="left-side-bar">
-                    <div class="brand-logo">
-                        <a href="index.html">
-                            <img src="~/vendors/images/deskapp-logo.svg" alt="" class="dark-logo">
-                            <img src="~/vendors/images/deskapp-logo-white.svg" alt="" class="light-logo">
-                        </a>
-                        <div class="close-sidebar" data-toggle="left-sidebar-close">
-                            <i class="ion-close-round"></i>
-                        </div>
-                    </div>
-                    <div class="menu-block customscroll">
-                        <div class="sidebar-menu">
-                            <ul id="accordion-menu">
-                                <li class="dropdown">
-                                    <a asp-controller="Home" asp-action="Index" class="dropdown-toggle no-arrow">
-                                        <span class="micon dw dw-house-1"></span><span class="mtext">Home</span>
-                                    </a>
-                                </li>
-                                @if (SignInManager.IsSignedIn(User))
-                                {
-
-                                    if (User.IsInRole("Admin"))
-                                    {
-                                        <li class="dropdown">
-                                            <a asp-controller="Administration" asp-action="ListUsers" class="dropdown-toggle no-arrow">
-                                                <span class="micon dw dw-house-1"></span><span class="mtext">User Manager</span>
-                                            </a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a asp-controller="Medicine" asp-action="Index" class="dropdown-toggle no-arrow">
-                                                <span class="micon dw dw-house-1"></span><span class="mtext">Medicine Manager</span>
-                                            </a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a asp-controller="MedicineInventory" asp-action="Index" class="dropdown-toggle no-arrow">
-                                                <span class="micon dw dw-house-1"></span><span class="mtext">Medicine_Inventory	 Manager</span>
-                                            </a>
-                                        </li>
-                                    }
-                                    else if (User.IsInRole("Customer"))
-                                    {
-                                        var customer = await UserManager.GetUserAsync(User);
-                                        var customerId = customer.Id;
-                                        <li class="dropdown">
-                                            <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" class="dropdown-toggle no-arrow">
-                                                <span class="micon dw dw-house-1"></span><span class="mtext">Đặt lịch hẹn</span>
-                                            </a>
-                                        </li>
-
-                                    }
-                                }
-                                <li class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle">
-                                        <span class="micon dw dw-edit2"></span><span class="mtext">Forms</span>
-                                    </a>
-                                    <ul class="submenu">
-                                        <li><a href="form-basic.html">Form Basic</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-
-                                </li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="mobile-menu-overlay"></div>
 
                 if (User.IsInRole("Admin"))
                 {
