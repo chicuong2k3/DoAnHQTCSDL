@@ -49,47 +49,27 @@
 			
 			@if (SignInManager.IsSignedIn(User))
 			{
-				<div class="user-info-dropdown">
-					<div class="dropdown">
-						<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-							<span class="user-icon">
-								<img src="~/vendors/images/photo1.jpg" alt="">
-							</span>
-							<span class="user-name">@User.Identity.Name</span>
-						</a>
-						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-							@if (!User.IsInRole("Admin"))
-							{
-								<a class="dropdown-item" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name"><i class="dw dw-user1"></i>Profile</a>
-							}
-							<form asp-controller="Account" asp-action="Logout" method="post">
-								<button type="submit" class="dropdown-item"><i class="dw dw-logout"></i>Log Out</button>
-							</form>
-							
-						</div>
-					</div>
+				<div class="d-flex flex-row align-items-center">
+					<span class="badge bg-warning text-light mx-3 fw-500 fs-3">@User.Identity.Name</span>
+					@if (!User.IsInRole("Admin"))
+					{
+						<a class="btn btn-primary mx-3" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name"><i class="dw dw-user1"></i>Profile</a>
+					}
+					<form asp-controller="Account" asp-action="Logout" method="post">
+						<button type="submit" class="btn btn-success mx-3"><i class="dw dw-logout"></i>Log Out</button>
+					</form>
 				</div>
+					
 			}
 			else
 			{
-				<div class="user-info-dropdown">
-					<div class="dropdown">
-						<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-							<span class="user-icon">
-								<img src="~/vendors/images/photo1.jpg" alt="">
-							</span>
-
-						</a>
-						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-
-							<a class="dropdown-item" asp-controller="Account" asp-action="Login">
-								<i class="icon-copy fa fa-sign-in" aria-hidden="true"></i>Đăng nhập
-							</a>
-							<a class="dropdown-item" asp-controller="Account" asp-action="Register">
-								<i class="icon-copy fa fa-user-plus" aria-hidden="true"></i>Đăng ký
-							</a>
-						</div>
-					</div>
+				<div class="d-flex flex-row align-items-center">
+					<a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Account" asp-action="Login">
+						<i class="icon-copy fa fa-sign-in" aria-hidden="true"></i>Đăng nhập
+					</a>
+					<a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Account" asp-action="Register">
+						<i class="icon-copy fa fa-user-plus" aria-hidden="true"></i>Đăng ký
+					</a>
 				</div>
 			}
 		</div>
