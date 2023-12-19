@@ -9,11 +9,12 @@ namespace WebApplication.Models
         [BindNever]
         [ValidateNever]
         public string Id { get; set; }
-        [Display(Name = "Full Name")]
+        [Display(Name = "Họ và tên")]
         public string? FullName { get; set; }
+        [Display(Name = "Địa chỉ")]
         public string? Address { get; set; }
         [DataType(DataType.Date)]
-        [Display(Name = "Date of Birth")]
+        [Display(Name = "Ngày sinh")]
         public DateTime? DayOfBirth { get; set; }
     }
 }

@@ -81,6 +81,7 @@ namespace WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 var result = await signInManager.PasswordSignInAsync(model.UserName, 
                     model.Password, 
                     model.RememberMe, 
@@ -88,23 +89,22 @@ namespace WebApplication.Controllers
 
                 if (result.Succeeded)
                 {
+                    var user = await userManager.FindByNameAsync(model.UserName);
+                    if (user.IsLocked)
+                    {
+                        ModelState.AddModelError(string.Empty, "Tài khoản đã bị khóa");
+                        return View(model);
+                    }
                     if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
                     {
                         return Redirect(ReturnUrl);
                     }
                     return RedirectToAction("Index", "Home");
                 }
-                if (result.RequiresTwoFactor)
-                {
-
-                }
-                if (result.IsLockedOut)
-                {
-
-                }
+                
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Tên đăng nhập hoặc mật khẩu không hợp lệ");
                     return View(model);
                 }
             }
@@ -125,7 +125,7 @@ namespace WebApplication.Controllers
         {
             var user = await userManager.FindByNameAsync(username);
             if (user == null) return Json(true);
-            return Json($"This Phone Number is already taken");
+            return Json($"Số điện thoại đã tồn tại");
         }
 
         public IActionResult AccessDenied()
@@ -133,7 +133,7 @@ namespace WebApplication.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Customer, Employee, Dentist")]
         public async Task<IActionResult> EditProfile(string username)
         {
             var user = await userManager.FindByNameAsync(username);
@@ -182,7 +182,7 @@ namespace WebApplication.Controllers
   
         }
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Customer, Employee, Dentist")]
         public async Task<IActionResult> EditProfile(string id, EditProfileModel model)
         {
             if (ModelState.IsValid)

@@ -32,7 +32,7 @@ namespace WebApplication
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/Login";
+                options.LoginPath = "/Account/Register";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
 

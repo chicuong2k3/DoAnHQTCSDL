@@ -2,24 +2,24 @@
 @model IEnumerable<ListUsersModel>
 
 @{
-	ViewData["Title"] = "User List";
+	ViewData["Title"] = "Danh sách User";
 }
 
 <a class="btn btn-success mb-3 text-light" asp-controller="Administration" asp-action="CreateUser">
 	<i class="icon-copy fa fa-plus-square-o" aria-hidden="true"></i>
-	<span class="mx-1">Create New User</span>
+	<span class="mx-1">Tạo User mới</span>
 </a>
 <div class="table-responsive">
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th scope="col">User Name</th>
-				<th scope="col">Full Name</th>
-				<th scope="col">Phone Number</th>
-				<th scope="col">Role</th>
+				<th scope="col">Tên đăng nhập</th>
+				<th scope="col">Họ và tên</th>
+				<th scope="col">Số điện thoại</th>
+				<th scope="col">Chức vụ</th>
 				<th scope="col"></th>
 				<th scope="col"></th>
-				<th scope="col">Active</th>
+				<th scope="col">Tình trạng tài khoản (Khóa)</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +29,16 @@
 					<td>@user.UserName</td>
 					<td>@user.FullName</td>
 					<td>@user.PhoneNumber</td>
-					<td>@user.Role</td>
+					<td>
+						@if (user.Role == "Dentist")
+						{
+							<text>Nha sĩ</text>
+						}
+						else if (user.Role == "Employee")
+						{
+							<text>Nhân viên</text>
+						}
+					</td>
 					
 					<td>
 						<a class="btn btn-warning text-light" asp-controller="Administration" asp-action="EditUser" asp-route-id="@user.Id">
@@ -68,15 +77,15 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-body text-center font-18">
-				<h4 class="padding-top-30 mb-30 weight-500">Are you sure you want to delete this user?</h4>
+				<h4 class="padding-top-30 mb-30 weight-500">Bạn có chắc chắn muốn xóa user này?</h4>
 				<div class="padding-bottom-30 row" style="max-width: 170px; margin: 0 auto;">
 					<div class="col-6">
 						<button type="button" class="btn btn-secondary border-radius-100 btn-block confirmation-btn" data-dismiss="modal"><i class="fa fa-times"></i></button>
-						NO
+						HỦY
 					</div>
 					<div class="col-6">
 						<button type="button" class="btn btn-primary border-radius-100 btn-block confirmation-btn yes-btn" data-dismiss="modal"><i class="fa fa-check"></i></button>
-						YES
+						XÓA
 					</div>
 				</div>
 			</div>

@@ -1,14 +1,14 @@
 ﻿@model EditUserModel
 
 @{
-    ViewData["Title"] = "Edit User";
+    ViewData["Title"] = "Sửa thông tin User";
 }
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Edit User</h4>
+                <h4 class="card-title">Sửa thông tin User</h4>
                 <div class="text-danger" asp-validation-summary="All"></div>
                 <form method="post">
                     <input type="hidden" asp-for="Id" />
@@ -30,12 +30,12 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <button type="submit" class="btn btn-success btn-block btn-rounded">
-                                Save
+                                Lưu thay đổi
                             </button>
                         </div>
                         <div class="col-6">
                             <a asp-controller="Administration" asp-action="ListUsers" type="button" class="btn btn-danger btn-block btn-rounded">
-                                Cancel
+                                Thoát
                             </a>
                         </div>
                     </div>

@@ -36,5 +36,9 @@ namespace Repositories
 		{
 			return await dbContext.Dentists.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();
 		}
-	}
+        public async Task<Dentist> GetDentistByIdAsync(string id)
+        {
+            return await dbContext.Dentists.FindAsync(id);
+        }
+    }
 }

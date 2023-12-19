@@ -69,8 +69,8 @@ namespace WebApplication.Controllers
         {
             ViewData["UserTypeList"] = new List<SelectListItem>()
             {
-                new SelectListItem("Dentist", "Dentist"),
-                new SelectListItem("Employee", "Employee")
+                new SelectListItem("Nha sĩ", "Dentist"),
+                new SelectListItem("Nhân viên", "Employee")
             };
             return View();
         }
