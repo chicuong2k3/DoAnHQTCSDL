@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "08ee077a-e718-42d6-98fe-3097d8db0692",
+                            ConcurrencyStamp = "49bf8fb6-e70b-4838-b2df-aed7339cdf16",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAENVhsx1lQSvMwTZdRqeeQbuG9PQIjdr6s8qyWrQedPqkE1Kq/0mY+9Lx3gDjVuntHA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ6O3OglT1kbpy9QtR6/7fq3kTW+YC+ytt7MOikeFpb0cVm3fAZ2d4f2vzY81WQIaQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7eaaf254-b224-4a07-ba2a-26cacd3c4b56",
+                            SecurityStamp = "b51b36a3-130c-41b5-907f-e995b74ff574",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -99,8 +99,8 @@ namespace DataModels.Migrations
                     b.Property<string>("DentistId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("AppointmentTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("AppointmentTime")
+                        .HasColumnType("date");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -262,8 +262,8 @@ namespace DataModels.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("ExpiryDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("InventoryQuantity")
                         .HasColumnType("int");

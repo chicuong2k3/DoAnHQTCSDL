@@ -10,7 +10,7 @@ namespace DataModels
         [ForeignKey(nameof(Medicine))]
         public int MedicineId { get; set; }
         public Medicine Medicine { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateOnly ExpiryDate { get; set; }
         public int InventoryQuantity { get; set; }
         public string? Unit { get; set; }
     }

@@ -17,7 +17,8 @@ namespace WebApplication
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), 
+                    x => x.UseDateOnlyTimeOnly());
             });
 
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>

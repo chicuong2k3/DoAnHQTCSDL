@@ -5,7 +5,7 @@ namespace DataModels
 {
     public class AppointmentSchedule
     {
-        public DateTime AppointmentTime { get; set; }
+        public DateOnly AppointmentTime { get; set; }
         public bool IsAvailable { get; set; }
         public Dentist Dentist { get; set; }
         [ForeignKey(nameof(Dentist))]   
