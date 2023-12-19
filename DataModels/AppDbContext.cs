@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Bogus;
 
 namespace DataModels
 {
@@ -118,6 +119,9 @@ namespace DataModels
                 RoleId = adminRoleId,
                 UserId = adminId
             });
+
+            Randomizer.Seed = new Random(8675390);
+            
         }
 
 

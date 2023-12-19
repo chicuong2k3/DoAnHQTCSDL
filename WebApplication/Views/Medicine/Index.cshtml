@@ -1,5 +1,5 @@
 ﻿@using DataModels
-@model IEnumerable<MedicineModel>
+@model IEnumerable<CreateMedicineModel>
 
 @{
 	ViewData["Title"] = "Medicine";
@@ -15,8 +15,7 @@
 			<tr>
 				<th scope="col">Name</th>
 				<th scope="col">Prescription</th>
-				<th scope="col">Quantity</th>
-				<th scope="col">Unit</th>
+				<th scope="col"></th>
 				<th scope="col"></th>
 				<th scope="col"></th>
 			</tr>
@@ -24,23 +23,25 @@
 		<tbody>
 			@foreach (var medicine in Model)
 			{
-				<tr id="row-@medicine.MedicineId">
+				<tr id="row-@medicine.Id">
 					<td>@medicine.Name</td>
 					<td>@medicine.Prescription</td>
-					<td>@medicine.Quantity</td>
-					<td>@medicine.Unit</td>
 
 					<td>
-						<a class="btn btn-warning text-light" asp-controller="Medicine" asp-action="Edit" asp-route-id="@medicine.MedicineId">
+						<a class="btn btn-warning text-light" asp-controller="Medicine" asp-action="Edit" asp-route-id="@medicine.Id">
 							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
 						</a>
 					</td>
 					<td>
-						<button data-id="@medicine.MedicineId" type="button" class="btn btn-danger text-light delete-confirm-btn">
+						<button data-id="@medicine.Id" type="button" class="btn btn-danger text-light delete-confirm-btn">
 							<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
 						</button>
 					</td>
-					
+					<td>
+						<a asp-action = "Edit" asp-controller="Medicine" asp-route-id=@medicine.Id class="btn btn-danger text-light delete-confirm-btn">
+							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
+						</a>
+					</td>
 				</tr>
 
 
@@ -87,7 +88,7 @@
 				$('#confirmation-modal .yes-btn').off('click').on('click', function () {
 					hideModal();
 					$.ajax({
-						url: '@Url.Action("DeleteUser", "Administration")',
+						url: '@Url.Action("Delete", "Medicine")',
 						type: 'POST',
 						contentType: 'application/x-www-form-urlencoded',
 						data: { id: id },
@@ -100,7 +101,7 @@
 							toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
 						}
 					});
-
+					
 				});
 			});
 

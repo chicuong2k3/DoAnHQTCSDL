@@ -16,6 +16,7 @@ namespace WebApplication.Controllers
 			this.dentistRepository = dentistRepository;
             this.appointmentScheduleRepository = appointmentScheduleRepository;
         }
+
 		public async Task<IActionResult> GetAvailableDentists(DateTime startTime, int duration)
 		{
 			DateTime endTime = startTime.AddMinutes(duration);

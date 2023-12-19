@@ -1,11 +1,13 @@
-﻿namespace WebApplication.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication.Models
 {
 	public class MedicineModel
 	{
-		public int MedicineId { get; set; }
+
+		public int Id { get; set; }
+		[Required]
 		public string Name { get; set; }
 		public string? Prescription { get; set; }
-		public int Quantity { get; set; }
-		public string? Unit { get; set; }
 	}
 }
