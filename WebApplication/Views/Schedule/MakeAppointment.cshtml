@@ -1,16 +1,16 @@
 ﻿@model CreateAppointmentModel
 
 @{
-    ViewData["Title"] = "Make an Appointment";
+    ViewData["Title"] = "Đặt lịch hẹn";
 }
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Make an Appointment</h4>
+                <h4 class="card-title">Đặt lịch hẹn</h4>
                 <div class="text-danger" asp-validation-summary="All"></div>
-                <form method="post">
+                <form method="get" asp-action="ReviewAppointment">
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="StartTime"></label>
                         <input class="form-control" asp-for="StartTime">
@@ -31,12 +31,12 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <button type="submit" class="btn btn-success btn-block btn-rounded">
-                                Save
+                                Review
                             </button>
                         </div>
                         <div class="col-6">
                             <a asp-controller="Home" asp-action="Index" type="button" class="btn btn-danger btn-block btn-rounded">
-                                Cancel
+                                Thoát
                             </a>
                         </div>
                     </div>
@@ -59,7 +59,9 @@
                         contentType: 'application/x-www-form-urlencoded',
                         data: { startTime: startTimeInput.val(), duration: duration.val() },
                         success: function (data) {
+                            $('#DentistList').empty();
                             data.forEach(x => {
+                                
                                 $('#DentistList').append($('<option></option>')
                                     .attr("value", x.id).text(x.fullName));
                             });

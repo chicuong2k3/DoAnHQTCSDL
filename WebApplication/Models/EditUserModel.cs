@@ -7,12 +7,12 @@ namespace WebApplication.Models
     {
         [Required]
         public string Id { get; set; }
-        [Display(Name = "User Name")]
-		
-		public string UserName { get; set; }
-        [Display(Name = "Phone Number")]
+        [Display(Name = "Tên đăng nhập")]
+
+        public string UserName { get; set; }
+        [Display(Name = "Số điện thoại")]
         public string PhoneNumber { get; set; }
-        [Display(Name = "Full Name")]
+        [Display(Name = "Họ và tên")]
         public string FullName { get; set; }
         public bool IsLocked { get; set; }
     }

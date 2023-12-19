@@ -32,7 +32,7 @@ namespace Repositories
         public async Task UpdateMedicine(Medicine medicine)
         {
             var check = await dbContext.Medicines.FindAsync(medicine.Id);
-            if(check != null)
+            if (check != null)
             {
                 dbContext.Medicines.Entry(check).CurrentValues.SetValues(medicine);
                 await dbContext.SaveChangesAsync();
@@ -42,7 +42,7 @@ namespace Repositories
         public async Task RemoveMedicine(int id)
         {
             var item = await dbContext.Medicines.FindAsync(id);
-            if(item != null)
+            if (item != null)
             {
                 dbContext.Medicines.Remove(item);
                 await dbContext.SaveChangesAsync();

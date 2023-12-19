@@ -1,14 +1,14 @@
 ﻿@model RegisterModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký";
 }
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Sign Up</h4>
+                <h4 class="card-title">Đăng ký</h4>
                 <div class="text-danger" asp-validation-summary="All"></div>
                 <form method="post" asp-controller="Account" asp-action="Register">
                     <div class="form-group mb-3">
@@ -44,12 +44,12 @@
                     <div class="row mb-3">
                         <div class="col-12">
                             <button type="submit" class="btn btn-success btn-block btn-rounded">
-                                Sign up
+                                Đăng ký
                             </button>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <div>Already have an account? <a asp-action="Login" class="text-success">Sign in</a></div>
+                        <div>Bạn đã có tài khoản? <a asp-action="Login" class="text-success">Đăng nhập</a></div>
                     </div>
                 </form>
             </div>

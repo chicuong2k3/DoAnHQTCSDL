@@ -1,14 +1,14 @@
 ﻿@model LoginModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng nhập";
 }
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Sign In</h4>
+                <h4 class="card-title">Đăng nhập</h4>
                 <div class="text-danger" asp-validation-summary="All"></div>
                 <form method="post">
                     <div class="form-group mb-3">
@@ -26,20 +26,17 @@
                             <label asp-for="RememberMe" class="custom-control-label"></label>
                             <input asp-for="RememberMe" class="custom-control-input">
                         </div>
-                        <div>
-                            <a href="" class="text-primary">Forgot your password?</a>
-                        </div>
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-12">
                             <button type="submit" class="btn btn-success btn-block btn-rounded">
-                                Sign in
+                                Đăng nhập
                             </button>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <div>Don't have an account? <a asp-action="Register" class="text-success">Sign up now</a></div>
+                        <div>Bạn chưa có tài khoản? <a asp-action="Register" class="text-success">Đăng ký tài khoản mới</a></div>
                     </div>
                     <input type="hidden" name="ReturnUrl" value="@ViewData["ReturnUrl"]" />
                 </form>

@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositories;
 using WebApplication.Models;
@@ -42,11 +43,13 @@ namespace WebApplication.Controllers
             }
             return Ok(availableDentists);
 		}
+		[Authorize(Roles = "Customer")]
         public async Task<IActionResult> MakeAppointment(string customerId)
 		{
 			ViewData["CustomerId"] = customerId;
-			return View();
-		}
+			
+            return View();
+        }
 		[HttpPost]
 		public async Task<IActionResult> MakeAppointment(CreateAppointmentModel model)
 		{
@@ -59,10 +62,21 @@ namespace WebApplication.Controllers
 					DentistId = model.DentistId,
 					CustomerId = model.CustomerId
 				};
-				// Lỗi khóa ngoại
+
 				await appointmentScheduleRepository.AddAppoinment(appointment);
+				return RedirectToAction("Index", "Home");
 			}
-			return View();
+			return View("ReviewAppointment", model);
 		}
-	}
+
+        [HttpGet]
+        public async Task<IActionResult> ReviewAppointment(CreateAppointmentModel model)
+        {
+			ViewData["EndTime"] = model.StartTime.AddMinutes(model.Duration);
+			var dentist = await dentistRepository.GetDentistByIdAsync(model.DentistId);
+
+            ViewData["DentistName"] = dentist.FullName;
+            return View(model);
+        }
+    }
 }
