@@ -1,8 +1,10 @@
 
+using AutoMapper;
 using DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
+using WebApplication.Congif;
 
 namespace WebApplication
 {
@@ -40,6 +42,17 @@ namespace WebApplication
             builder.Services.AddScoped<DentistRepository>();
             builder.Services.AddScoped<EmployeeRepository>();
             builder.Services.AddScoped<AppointmentScheduleRepository>();
+            builder.Services.AddScoped<MedicineRepository>();
+
+            // Auto Mapper Configurations
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new ConfigAutoMapper());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
+            builder.Services.AddMvc();
 
             var app = builder.Build();
 
