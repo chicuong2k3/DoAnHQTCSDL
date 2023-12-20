@@ -13,9 +13,9 @@
 	<table class="table table-striped">
 		<thead>
 			<tr>
+				<th class="table-plus datatable-nosort">ID</th>
 				<th scope="col">Name</th>
 				<th scope="col">Prescription</th>
-				<th scope="col"></th>
 				<th scope="col"></th>
 				<th scope="col"></th>
 			</tr>
@@ -24,6 +24,7 @@
 			@foreach (var medicine in Model)
 			{
 				<tr id="row-@medicine.Id">
+					<td class="table-plus">@medicine.Id</td>
 					<td>@medicine.Name</td>
 					<td>@medicine.Prescription</td>
 
@@ -36,11 +37,6 @@
 						<button data-id="@medicine.Id" type="button" class="btn btn-danger text-light delete-confirm-btn">
 							<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
 						</button>
-					</td>
-					<td>
-						<a asp-action="Edit" asp-controller="Medicine" asp-route-id=@medicine.Id class="btn btn-danger text-light delete-confirm-btn">
-							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
-						</a>
 					</td>
 				</tr>
 
@@ -80,7 +76,7 @@
 	@* Toastr *@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	<script>
+	<script type = "module">
 		$(document).ready(function () {
 			$('.delete-confirm-btn').on('click', function () {
 				let id = $(this).attr('data-id');
@@ -101,7 +97,6 @@
 							toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
 						}
 					});
-
 				});
 			});
 

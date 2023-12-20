@@ -84,8 +84,12 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await medicineRepository.RemoveMedicine(id);
-            return RedirectToAction("Index");
+            var result = await medicineRepository.RemoveMedicine(id);
+            if(result == 1)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }

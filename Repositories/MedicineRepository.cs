@@ -39,14 +39,16 @@ namespace Repositories
             }
         }
 
-        public async Task RemoveMedicine(int id)
+        public async Task<int> RemoveMedicine(int id)
         {
             var item = await dbContext.Medicines.FindAsync(id);
             if (item != null)
             {
                 dbContext.Medicines.Remove(item);
                 await dbContext.SaveChangesAsync();
+                return 1;
             }
+            return 0;
         }
 
         public async Task AddMedicine(Medicine model)

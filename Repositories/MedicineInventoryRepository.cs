@@ -28,14 +28,16 @@ namespace Repositories
 			await dbContext.SaveChangesAsync();
 		}
 
-		public async Task Delete(int id)
+		public async Task<int> Delete(int id)
 		{
 			var item = await dbContext.MedicineInventories.FindAsync(id);
 			if (item != null)
 			{
 				dbContext.MedicineInventories.Remove(item);
 				await dbContext.SaveChangesAsync();
+				return 1;
 			}
+			return 0;
 		}
 
 		public async Task Update(MedicineInventory model)

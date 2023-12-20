@@ -12,6 +12,6 @@ namespace WebApplication.Models
         [Required]
         public int InventoryQuantity { get; set; }
         [Required]
-        public string? Unit { get; set; }
+        public string? Unit { get; set; } = "Viên";
     }
 }

@@ -2,52 +2,52 @@
 
 @model IEnumerable<MedicineInventoryModel>
 
+@{
+	ViewData["Title"] = "Medicine warehouse";
+}
 
-<div class="card-box mb-30">
+
+
+<div class="table-responsive">
 	<div class="pd-20">
 		<h4 class="text-blue h4">Data Table with Export Buttons</h4>
 	</div>
-	<a class="btn btn-success mb-3 text-light" asp-controller="MedicineIventory" asp-action="Create">
+	<a class="btn btn-success mb-3 text-light" asp-controller="MedicineInventory" asp-action="Create">
 		<i class="icon-copy fa fa-plus-square-o" aria-hidden="true"></i>
 		<span class="mx-1">Add Medicine Inventory</span>
 	</a>
-	<div class="pb-20">
-		<table class="table hover multiple-select-row data-table-export nowrap">
-			<thead>
-				<tr>
-					<th class="table-plus datatable-nosort">ID</th>
-					<th>MedicineId</th>
-					<th>ExpiryDate</th>
-					<th>Quantity</th>
-					<th>Unit</th>
-					<th></th>
-					<th></th>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="table-plus datatable-nosort">ID</th>
+				<th>MedicineId</th>
+				<th>ExpiryDate</th>
+				<th>Quantity</th>
+				<th>Unit</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr id="row-@item.Id">
+					<td class="table-plus">@item.Id</td>
+					<td>@item.MedicineId</td>
+					<td>@item.ExpiryDate</td>
+					<td>@item.InventoryQuantity</td>
+					<td>@item.Unit</td>
+					<td>
+						<a class="btn btn-warning text-light" asp-controller="MedicineInventory" asp-action="Edit" asp-route-id="@item.Id">
+							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
+						</a>
+						<button data-id="@item.Id" type="button" class="btn btn-danger text-light delete-confirm-btn">
+							<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
+						</button>
+					</td>
 				</tr>
-			</thead>
-			<tbody>
-				@foreach(var item in Model)
-				{
-					<tr>
-						<td class="table-plus">@item.Id</td>
-						<td>@item.MedicineId</td>
-						<td>@item.ExpiryDate</td>
-						<td>@item.InventoryQuantity</td>
-						<td>@item.Unit</td>
-						<td>
-							<button data-id="@item.Id" type="button" class="btn btn-danger text-light delete-confirm-btn">
-								<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
-							</button>
-						</td>
-						<td>
-							<a asp-action="Edit" asp-controller="Medicine" asp-route-id=@item.Id class="btn btn-danger text-light delete-confirm-btn">
-								<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
-							</a>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
+			}
+		</tbody>
+	</table>
 </div>
 
 <div class="modal fade" id="confirmation-modal" tabindex="-1" role="dialog" style="display: none" aria-hidden="true">
@@ -92,47 +92,49 @@
 <script src="~/vendors/scripts/datatable-setting.js"></script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119386393-1"></script>
-<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag() { dataLayer.push(arguments); }
-	gtag('js', new Date());
+@section Styles {
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-	gtag('config', 'UA-119386393-1');
+}
 
+@section Scripts {
+	@* Toastr *@
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	$(document).ready(function () {
-		$('.delete-confirm-btn').on('click', function () {
-			let id = $(this).attr('data-id');
-			showModal(id);
-			$('#confirmation-modal .yes-btn').off('click').on('click', function () {
-				hideModal();
-				$.ajax({
-					url: '@Url.Action("Delete", "MedicineInventory")',
-					type: 'POST',
-					contentType: 'application/x-www-form-urlencoded',
-					data: { id: id },
-					success: function (data) {
-						$(`#row-${id}`).remove();
-						toastr.success(data, 'Notification', { timeOut: 2000 });
-					},
-					error: function (error) {
-						console.log(error)
-						toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
-					}
+	<script type="module">
+		$(document).ready(function () {
+			$('.delete-confirm-btn').on('click', function () {
+				let id = $(this).attr('data-id');
+				showModal(id);
+				$('#confirmation-modal .yes-btn').off('click').on('click', function () {
+					hideModal();
+					$.ajax({
+						url: '@Url.Action("Delete", "MedicineInventory")',
+						type: 'POST',
+						contentType: 'application/x-www-form-urlencoded',
+						data: { id: id },
+						success: function (data) {
+							$(`#row-${id}`).remove();
+							toastr.success(data, 'Notification', { timeOut: 2000 });
+						},
+						error: function (error) {
+							console.log(error)
+							toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
+						}
+					});
 				});
-
 			});
-		});
 
-		function showModal(id) {
-			let modal = $('#confirmation-modal');
-			modal.attr('data-id', id);
-			modal.modal('show');
-		}
-		function hideModal() {
-			let modal = $('#confirmation-modal');
-			modal.attr('data-id', '');
-			modal.modal('hide');
-		}
-</script>
+			function showModal(id) {
+				let modal = $('#confirmation-modal');
+				modal.attr('data-id', id);
+				modal.modal('show');
+			}
+			function hideModal() {
+				let modal = $('#confirmation-modal');
+				modal.attr('data-id', '');
+				modal.modal('hide');
+			}
+		});
+	</script>
+}

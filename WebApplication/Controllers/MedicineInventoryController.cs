@@ -2,8 +2,10 @@
 using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Repositories;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
@@ -36,12 +38,13 @@ namespace WebApplication.Controllers
 		public async Task<IActionResult> Create()
 		{
 			var rawData = await medicineRepository.GetAllMedicine();
-			List<MedicineModel> model = new List<MedicineModel>();
+			var listItem = new List<SelectListItem>();
 			foreach (var item in rawData)
 			{
-				model.Add(mapper.Map<MedicineModel>(item));
+				listItem.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString()});
 			}
-			return View(model);
+			ViewBag.ListMidicine = listItem;
+			return View();
 		}
 		[HttpPost]
 		public async Task<IActionResult> Create(MedicineInventoryModel model)
@@ -58,8 +61,37 @@ namespace WebApplication.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(int id)
 		{
-			await medicineInventoryRepository.Delete(id);
-			return RedirectToAction("Index");
+			var result = await medicineInventoryRepository.Delete(id);
+			if(result == 1)
+			{
+				return Ok();
+			}
+			return BadRequest();
 		}
+
+		public async Task<IActionResult> Edit(int id)
+		{
+			var rawData = await medicineRepository.GetAllMedicine();
+			var listItem = new List<SelectListItem>();
+			foreach (var item in rawData)
+			{
+				listItem.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+			}
+			ViewBag.ListMidicine = listItem;
+			ViewBag.id = id;
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(MedicineInventoryModel model)
+		{
+			if(ModelState.IsValid)
+			{
+				await medicineInventoryRepository.Update(mapper.Map<MedicineInventory>(model));
+				return RedirectToAction("Index");
+			}
+			return View(model);
+		}
+
 	}
 }
