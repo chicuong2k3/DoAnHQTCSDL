@@ -81,14 +81,14 @@ namespace DataModels.Migrations
                         {
                             Id = "c6647262-ef40-40b3-af33-f89f80d35378",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "61689655-4448-41c9-be53-b2c1f2a38cdc",
+                            ConcurrencyStamp = "86d9d0b7-490e-4de0-8e64-5ceeee3b0eb2",
                             EmailConfirmed = false,
                             IsLocked = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN123",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPC3Vr+iM4mAcaT4qAGjkQZMubKIGC3o5Hk9VwLICZHIfk9jJxY79TXjuUKHuRbEpw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEON+kHDkHK63ytfqpvGrNDYvZa3VuoLbldXK40hrEzEKLcLmgw7g5+wRQUj0V5IsPQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6b4f50e6-a48b-43c2-9550-4e2798dec3e4",
+                            SecurityStamp = "5f2f8b8c-6e41-4e4a-85f9-71a718e2c308",
                             TwoFactorEnabled = false,
                             UserName = "admin123"
                         });
@@ -223,6 +223,9 @@ namespace DataModels.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("ServicePrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id", "SequenceNumber");
 
                     b.HasIndex("CreatedByDentistId");
@@ -248,6 +251,9 @@ namespace DataModels.Migrations
 
                     b.Property<string>("Prescription")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -300,6 +306,22 @@ namespace DataModels.Migrations
                     b.HasIndex("MedicalRecordId", "SequenceNumber");
 
                     b.ToTable("Medicine_MedicalRecords");
+                });
+
+            modelBuilder.Entity("DataModels.PersonalSchedule", b =>
+                {
+                    b.Property<string>("DentistId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DentistId", "StartTime");
+
+                    b.ToTable("PersonalSchedules");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -516,6 +538,17 @@ namespace DataModels.Migrations
                     b.Navigation("MedicalRecord");
 
                     b.Navigation("Medicine");
+                });
+
+            modelBuilder.Entity("DataModels.PersonalSchedule", b =>
+                {
+                    b.HasOne("DataModels.Dentist", "Dentist")
+                        .WithMany()
+                        .HasForeignKey("DentistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dentist");
                 });
 
             modelBuilder.Entity("DataModels.MedicalRecord", b =>

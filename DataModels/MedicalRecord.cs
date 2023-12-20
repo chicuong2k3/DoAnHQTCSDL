@@ -9,6 +9,7 @@ namespace DataModels
         public int SequenceNumber { get; set; }
         public DateTime ExaminationDate { get; set; }
         public string Service { get; set; }
+        public decimal ServicePrice { get; set; }
 
         public Customer Customer { get; set; }
         [ForeignKey(nameof(Customer))]

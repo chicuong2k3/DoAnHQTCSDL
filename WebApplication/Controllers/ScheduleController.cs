@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositories;
+using System.Data;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
@@ -111,13 +112,36 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Dentist")]
+		[Authorize(Roles = "Dentist")]
+		[HttpGet]
+		public async Task<IActionResult> GetAppointmentsByDate(string dentistId, DateTime date)
+		{
+			try
+			{
+				ViewData["ScheduleDate"] = date;
+                var scheduleList = await appointmentScheduleRepository
+                .GetAllSchedulesBelongToADentist(dentistId);
+				var list = scheduleList
+					.Where(x =>
+					x.StartTime.Year == date.Year
+					&& x.StartTime.Month == date.Month
+					&& x.StartTime.Day == date.Day).ToList();
+
+                return PartialView("_ListSchedulePartial", list);
+
+			}
+			catch (Exception)
+			{
+				return BadRequest();
+			}
+		}
+
+		[Authorize(Roles = "Dentist")]
         [HttpGet]
         public async Task<IActionResult> ListAppointmentSchedules(string dentistId)
         {
-			var scheduleList = await appointmentScheduleRepository
-				.GetAllSchedulesBelongToADentist(dentistId);
-			return View(scheduleList);
+			ViewData["DentistId"] = dentistId;
+			return View();
         }
     }
 }

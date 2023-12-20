@@ -1,0 +1,48 @@
+﻿@using DataModels
+@using Repositories
+@model List<AppointmentSchedule>
+@inject CustomerRepository CustomerRepository
+
+@{
+	var scheduleTime = (DateTime)ViewData["ScheduleDate"];
+}
+
+<div class="table-responsive">
+	<h2>Danh sách lịch hẹn ngày @scheduleTime.ToString("dd/MM/yyyy")</h2>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Thời gian bắt đầu</th>
+				<th scope="col">Thời gian kết thúc</th>
+				<th scope="col">Khách hàng</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var schedule in Model)
+			{
+				<tr>
+					<td>@schedule.StartTime.ToString("HH:mm")</td>
+					<td>@schedule.EndTime.ToString("HH:mm")</td>
+					<td>
+						@{
+							var customer = await CustomerRepository
+							.GetCustomerByIdAsync(schedule.CustomerId);
+
+						}
+						@customer.FullName
+					</td>
+
+					<td>
+						<a class="btn btn-warning text-light" asp-controller="Administration" asp-action="EditUser"
+						   asp-route-dentistId="@schedule.DentistId" asp-asp-route-startTime="StartTime">
+							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
+						</a>
+					</td>
+				</tr>
+
+
+			}
+		</tbody>
+	</table>
+</div>

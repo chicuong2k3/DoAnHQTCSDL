@@ -1,52 +1,49 @@
-﻿@using DataModels
-@using Repositories
-@model List<AppointmentSchedule>
-@inject CustomerRepository CustomerRepository
+﻿
 
 @{
 	ViewData["Title"] = "Danh sách lịch hẹn";
 }
 
+<div class="row m-3">
+	<div class="col-6 form-group d-flex align-items-center">
+		<label class="form-label col-3">Chọn ngày hẹn</label>
+		<input id="appointmentDate" type="date" class="form-control" />
+	</div>
+	<div class="col-5">
+		<button type="button" id="submitDateBtn" class="btn btn-danger">Xem lịch hẹn</button>
+	</div>
+</div>
+
 <a class="btn btn-success mb-3 text-light" asp-controller="Administration" asp-action="CreateUser">
 	<i class="icon-copy fa fa-plus-square-o" aria-hidden="true"></i>
 	<span class="mx-1">Thêm lịch cá nhân</span>
 </a>
-<div class="table-responsive">
-	<h2>Danh sách lịch hẹn ngày @Model[0].StartTime.ToString("dd/MM/yyyy")</h2>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">Thời gian bắt đầu</th>
-				<th scope="col">Thời gian kết thúc</th>
-				<th scope="col">Khách hàng</th>
-				<th scope="col"></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var schedule in Model)
-			{
-				<tr>
-					<td>@schedule.StartTime.ToString("HH:mm")</td>
-					<td>@schedule.EndTime.ToString("HH:mm")</td>
-					<td>	
-						@{
-							var customer = await CustomerRepository
-							.GetCustomerByIdAsync(schedule.CustomerId);
 
-						}
-						@customer.FullName
-					</td>
+<div id="scheduleTable">
 
-					<td>
-						<a class="btn btn-warning text-light" asp-controller="Administration" asp-action="EditUser" 
-						asp-route-dentistId="@schedule.DentistId" asp-asp-route-startTime="StartTime">
-							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
-						</a>
-					</td>
-				</tr>
-
-
-			}
-		</tbody>
-	</table>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#submitDateBtn').on('click', function () {
+                let appointmentDate = $("#appointmentDate").val();
+                
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetAppointmentsByDate", "Schedule")',
+                    data: { date: appointmentDate, dentistId: '@(ViewData["DentistId"] as string)' },
+                    success: function (response) {
+                        $('#scheduleTable').empty();
+                        $('#scheduleTable').html(response);
+                    },
+                    error: function (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+
+       
+    </script>
+}
