@@ -143,5 +143,26 @@ namespace WebApplication.Controllers
 			ViewData["DentistId"] = dentistId;
 			return View();
         }
+
+		[Authorize(Roles = "Dentist")]
+		[HttpGet]
+		public async Task<IActionResult> CreatePersonalSchedule(string dentistId)
+		{
+			ViewData["DentistId"] = dentistId;
+
+            return View();
+		}
+
+        [Authorize(Roles = "Dentist")]
+        [HttpPost]
+        public async Task<IActionResult> CreatePersonalSchedule(CreatePersonalScheduleModel model)
+        {
+            if (ModelState.IsValid)
+			{
+
+			}
+
+            return View(model);
+        }
     }
 }

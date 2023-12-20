@@ -44,6 +44,7 @@ namespace WebApplication
 			builder.Services.AddScoped<AppointmentScheduleRepository>();
 			builder.Services.AddScoped<MedicineRepository>();
 			builder.Services.AddScoped<MedicineInventoryRepository>();
+			builder.Services.AddScoped<PersonalScheduleRepository>();
 
 			// Auto Mapper Configurations
 			var mapperConfig = new MapperConfiguration(mc =>

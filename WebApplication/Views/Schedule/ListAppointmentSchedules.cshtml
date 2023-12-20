@@ -14,7 +14,7 @@
 	</div>
 </div>
 
-<a class="btn btn-success mb-3 text-light" asp-controller="Administration" asp-action="CreateUser">
+<a class="btn btn-success mb-3 text-light" asp-controller="Schedule" asp-action="CreatePersonalSchedule" asp-route-dentistId="@(ViewData["DentistId"] as string)">
 	<i class="icon-copy fa fa-plus-square-o" aria-hidden="true"></i>
 	<span class="mx-1">Thêm lịch cá nhân</span>
 </a>
