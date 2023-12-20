@@ -10,8 +10,8 @@ namespace DataModels
         public Dentist Dentist { get; set; }
         [ForeignKey(nameof(Dentist))]   
         public string DentistId { get; set; }
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
         [ForeignKey(nameof(Customer))]
-        public string CustomerId { get; set; }
+        public string? CustomerId { get; set; }
     }
 }

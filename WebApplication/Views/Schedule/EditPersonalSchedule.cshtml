@@ -1,15 +1,15 @@
 ﻿@model PersonalScheduleModel
 
 @{
-    ViewData["Title"] = "Thêm lịch cá nhân";
+    ViewData["Title"] = "Sửa lịch cá nhân";
 }
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Thêm lịch cá nhân</h4>
-                <form method="post" asp-action="CreatePersonalSchedule">
+                <h4 class="card-title">Sửa lịch cá nhân</h4>
+                <form method="post" asp-action="EditPersonalSchedule">
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="Date"></label>
                         <input class="form-control" asp-for="Date">
@@ -25,12 +25,13 @@
                         <input class="form-control" asp-for="EndTime">
                         <span class="form-control-feedback text-danger" asp-validation-for="EndTime"></span>
                     </div>
-                    
+
                     <input class="form-control" type="hidden" asp-for="DentistId" value="@(ViewData["DentistId"] as string)">
+                    <input class="form-control" type="hidden" name="oldStartTimeStr" value="@(ViewData["OldStartTime"] as string)">
                     <div class="row mb-3">
                         <div class="col-6">
                             <button type="submit" class="btn btn-success btn-block btn-rounded">
-                                Thêm lịch
+                                Lưu thay đổi
                             </button>
                         </div>
                         <div class="col-6">
@@ -45,4 +46,3 @@
     </div>
 </div>
 
-         

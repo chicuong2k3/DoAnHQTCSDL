@@ -5,6 +5,7 @@
 
 @{
 	var scheduleTime = (DateTime)ViewData["ScheduleDate"];
+	
 }
 
 <div class="table-responsive">
@@ -21,23 +22,30 @@
 		<tbody>
 			@foreach (var schedule in Model)
 			{
+				var customer = await CustomerRepository
+				.GetCustomerByIdAsync(schedule.CustomerId);
 				<tr>
 					<td>@schedule.StartTime.ToString("HH:mm")</td>
 					<td>@schedule.EndTime.ToString("HH:mm")</td>
 					<td>
-						@{
-							var customer = await CustomerRepository
-							.GetCustomerByIdAsync(schedule.CustomerId);
-
+						
+						@if (customer != null) {
+							<text>@customer.FullName</text>
 						}
-						@customer.FullName
+						else
+						{
+							<span class="text-primary">Lịch hẹn cá nhân</span>
+						}
 					</td>
-
 					<td>
-						<a class="btn btn-warning text-light" asp-controller="Administration" asp-action="EditUser"
-						   asp-route-dentistId="@schedule.DentistId" asp-asp-route-startTime="StartTime">
-							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
-						</a>
+						@if (customer == null)
+						{
+								<a class="btn btn-warning text-light" asp-controller="Schedule" asp-action="EditPersonalSchedule"
+							   asp-route-dentistId="@schedule.DentistId" asp-route-startTimeStr="@schedule.StartTime.ToString()">
+									<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
+								</a>
+						
+						}
 					</td>
 				</tr>
 

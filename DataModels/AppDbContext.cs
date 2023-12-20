@@ -14,8 +14,6 @@ namespace DataModels
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-			builder.Entity<PersonalSchedule>()
-				.HasKey(x => new { x.DentistId, x.StartTime });
 			//key for AppointmentSchedule
 			builder.Entity<AppointmentSchedule>()
                 .HasKey(x => new { x.DentistId, x.StartTime });
@@ -132,7 +130,6 @@ namespace DataModels
         public DbSet<Dentist> Dentists { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<AppointmentSchedule> AppointmentSchedules { get; set; }
-        public DbSet<PersonalSchedule> PersonalSchedules { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<MedicineInventory> MedicineInventories { get; set; }

@@ -138,7 +138,7 @@ namespace WebApplication.Controllers
 
 		[Authorize(Roles = "Dentist")]
         [HttpGet]
-        public async Task<IActionResult> ListAppointmentSchedules(string dentistId)
+        public IActionResult ListAppointmentSchedules(string dentistId)
         {
 			ViewData["DentistId"] = dentistId;
 			return View();
@@ -155,14 +155,85 @@ namespace WebApplication.Controllers
 
         [Authorize(Roles = "Dentist")]
         [HttpPost]
-        public async Task<IActionResult> CreatePersonalSchedule(CreatePersonalScheduleModel model)
+        public async Task<IActionResult> CreatePersonalSchedule(PersonalScheduleModel model)
         {
             if (ModelState.IsValid)
 			{
-
+				var schedule = new AppointmentSchedule()
+				{
+					StartTime = model.StartTime,
+					EndTime = model.EndTime,
+					DentistId = model.DentistId
+				};
+				await appointmentScheduleRepository.AddAppoinment(schedule);
+				return RedirectToAction("ListAppointmentSchedules", new { dentistId = model.DentistId});
 			}
 
             return View(model);
         }
-    }
+		[Authorize(Roles = "Dentist")]
+		public async Task<IActionResult> EditPersonalSchedule(string dentistId, string startTimeStr)
+		{
+			ViewData["DentistId"] = dentistId;
+
+            if (!DateTime.TryParse(startTimeStr, out DateTime startTime))
+			{
+				return BadRequest("Invalid startTime format");
+			}
+
+			var personalSchedule = await appointmentScheduleRepository.FindAsync(dentistId, startTime);
+			if (personalSchedule == null)
+			{
+				return BadRequest();
+			}
+
+			var model = new PersonalScheduleModel()
+			{
+				Date = personalSchedule.StartTime,
+				StartTime = personalSchedule.StartTime,
+				EndTime = personalSchedule.EndTime,
+				DentistId = personalSchedule.DentistId
+			};
+			ViewData["OldStartTime"] = startTime.ToString();
+			return View(model);
+		}
+
+		[Authorize(Roles = "Dentist")]
+		[HttpPost]
+		public async Task<IActionResult> EditPersonalSchedule(PersonalScheduleModel model, string oldStartTimeStr)
+		{
+			if (ModelState.IsValid)
+			{
+                if (!DateTime.TryParse(oldStartTimeStr, out DateTime oldStartTime))
+                {
+                    return BadRequest("Invalid oldStartTime format");
+                }
+
+                var schedule = await appointmentScheduleRepository
+					.FindAsync(model.DentistId, oldStartTime);
+				if (schedule == null) return BadRequest();
+
+				DateTime sTime = new DateTime(
+					model.Date.Year,
+					model.Date.Month,
+					model.Date.Day,
+					model.StartTime.Hour,
+					model.StartTime.Minute,
+					model.StartTime.Second
+				);
+				DateTime eTime = new DateTime(
+					model.Date.Year,
+					model.Date.Month,
+					model.Date.Day,
+					model.EndTime.Hour,
+					model.EndTime.Minute,
+					model.EndTime.Second
+				);
+				await appointmentScheduleRepository.UpdateAsync(schedule, sTime, eTime);
+				return RedirectToAction("ListAppointmentSchedules", new { dentistId = model.DentistId });
+			}
+			return View(model);
+		}
+
+	}
 }

@@ -2,7 +2,7 @@
 
 namespace WebApplication.Models
 {
-    public class CreatePersonalScheduleModel
+    public class PersonalScheduleModel
     {
         [Display(Name = "Ngày")]
         [DataType(DataType.Date)]

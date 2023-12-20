@@ -29,5 +29,26 @@ namespace Repositories
 			return await dbContext.AppointmentSchedules
 				.Where(x => x.DentistId == dentistId).ToListAsync();
 		}
-    }
+
+		public async Task<AppointmentSchedule> FindAsync(string dentistId, DateTime startTime)
+		{
+			return await dbContext.AppointmentSchedules
+				.Where(x => x.DentistId == dentistId && x.StartTime == startTime).SingleOrDefaultAsync();
+		}
+
+		public async Task UpdateAsync(AppointmentSchedule schedule, DateTime sTime, DateTime eTime)
+		{
+			var newSchedule = new AppointmentSchedule()
+			{
+				StartTime = sTime,
+				EndTime = eTime,
+				DentistId = schedule.DentistId,
+				CustomerId = schedule.CustomerId
+			};
+            dbContext.AppointmentSchedules.Remove(schedule);
+            await dbContext.SaveChangesAsync();
+            dbContext.AppointmentSchedules.Add(newSchedule);
+			await dbContext.SaveChangesAsync();
+		}
+	}
 }
