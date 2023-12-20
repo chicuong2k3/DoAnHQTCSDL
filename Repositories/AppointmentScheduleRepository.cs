@@ -23,5 +23,11 @@ namespace Repositories
             await dbContext.AppointmentSchedules.AddAsync(appointment);
 			await dbContext.SaveChangesAsync();	
         }
+
+		public async Task<List<AppointmentSchedule>> GetAllSchedulesBelongToADentist(string dentistId)
+		{
+			return await dbContext.AppointmentSchedules
+				.Where(x => x.DentistId == dentistId).ToListAsync();
+		}
     }
 }

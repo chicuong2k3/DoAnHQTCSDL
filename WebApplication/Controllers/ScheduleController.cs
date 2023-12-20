@@ -17,11 +17,26 @@ namespace WebApplication.Controllers
 			this.dentistRepository = dentistRepository;
             this.appointmentScheduleRepository = appointmentScheduleRepository;
         }
-
-		public async Task<IActionResult> GetAvailableDentists(DateTime startTime, int duration)
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetAvailableDentists(DateTime date, DateTime startTime, DateTime endTime)
 		{
-			DateTime endTime = startTime.AddMinutes(duration);
-			var dentists = await dentistRepository.GetAllAsync();
+            DateTime sTime = new DateTime(
+                    date.Year,
+                    date.Month,
+                    date.Day,
+                    startTime.Hour,
+                    startTime.Minute,
+                    startTime.Second
+                );
+            DateTime eTime = new DateTime(
+                date.Year,
+                date.Month,
+                date.Day,
+                endTime.Hour,
+                endTime.Minute,
+                endTime.Second
+            );
+            var dentists = await dentistRepository.GetAllAsync();
 			var availableDentists = new List<Dentist>();
             foreach (var dentist in dentists)
 			{
@@ -29,8 +44,8 @@ namespace WebApplication.Controllers
                 var schedules = await appointmentScheduleRepository.GetAppointmentsOfDentist(dentist.Id);
 				foreach (var schedule in schedules)
 				{
-					if ((startTime >= schedule.StartTime && startTime <= schedule.EndTime)
-						|| (endTime >= schedule.StartTime && endTime <= schedule.EndTime))
+					if ((sTime >= schedule.StartTime && sTime <= schedule.EndTime)
+						|| (eTime >= schedule.StartTime && eTime <= schedule.EndTime))
 					{
 						isAvailable = false;
 						break;
@@ -50,33 +65,59 @@ namespace WebApplication.Controllers
 			
             return View();
         }
-		[HttpPost]
+        [Authorize(Roles = "Customer")]
+        [HttpPost]
 		public async Task<IActionResult> MakeAppointment(CreateAppointmentModel model)
 		{
 			if (ModelState.IsValid)
 			{
 				var appointment = new AppointmentSchedule()
 				{
-					StartTime = model.StartTime,
-					EndTime = model.StartTime.AddMinutes(model.Duration),
 					DentistId = model.DentistId,
 					CustomerId = model.CustomerId
 				};
+				DateTime sTime = new DateTime(
+					model.Date.Year,
+					model.Date.Month,
+					model.Date.Day,
+					model.StartTime.Hour,
+					model.StartTime.Minute,
+					model.StartTime.Second
+				);
+                DateTime eTime = new DateTime(
+                    model.Date.Year,
+                    model.Date.Month,
+                    model.Date.Day,
+                    model.EndTime.Hour,
+                    model.EndTime.Minute,
+                    model.EndTime.Second
+                );
 
-				await appointmentScheduleRepository.AddAppoinment(appointment);
+				appointment.StartTime = sTime;
+				appointment.EndTime = eTime;
+
+                await appointmentScheduleRepository.AddAppoinment(appointment);
 				return RedirectToAction("Index", "Home");
 			}
 			return View("ReviewAppointment", model);
 		}
-
+        [Authorize(Roles = "Customer")]
         [HttpGet]
         public async Task<IActionResult> ReviewAppointment(CreateAppointmentModel model)
         {
-			ViewData["EndTime"] = model.StartTime.AddMinutes(model.Duration);
 			var dentist = await dentistRepository.GetDentistByIdAsync(model.DentistId);
 
             ViewData["DentistName"] = dentist.FullName;
             return View(model);
+        }
+
+        [Authorize(Roles = "Dentist")]
+        [HttpGet]
+        public async Task<IActionResult> ListAppointmentSchedules(string dentistId)
+        {
+			var scheduleList = await appointmentScheduleRepository
+				.GetAllSchedulesBelongToADentist(dentistId);
+			return View(scheduleList);
         }
     }
 }

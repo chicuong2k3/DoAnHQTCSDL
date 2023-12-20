@@ -12,14 +12,19 @@
                 <div class="text-danger" asp-validation-summary="All"></div>
                 <form method="get" asp-action="ReviewAppointment">
                     <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="Date"></label>
+                        <input class="form-control" asp-for="Date">
+                        <span class="form-control-feedback text-danger" asp-validation-for="Date"></span>
+                    </div>
+                    <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="StartTime"></label>
                         <input class="form-control" asp-for="StartTime">
                         <span class="form-control-feedback text-danger" asp-validation-for="StartTime"></span>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="form-control-label" asp-for="Duration"></label>
-                        <input class="form-control" asp-for="Duration">
-                        <span class="form-control-feedback text-danger" asp-validation-for="Duration"></span>
+                        <label class="form-control-label" asp-for="EndTime"></label>
+                        <input class="form-control" asp-for="EndTime">
+                        <span class="form-control-feedback text-danger" asp-validation-for="EndTime"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="DentistId"></label>
@@ -49,20 +54,26 @@
 @section Scripts {
     <script>
         $(function () {
+            let dateInput = $('#Date');
             let startTimeInput = $('#StartTime');
-            let duration = $('#Duration');
-            startTimeInput.on('change', function () {
-                duration.on('change', function () {
+            let endTimeInput = $('#EndTime');
+            let dentistList = $('#DentistList');
+
+            function loadAvailableDentists() {
+                if (dateInput.val() && startTimeInput.val() && endTimeInput.val()) {
                     $.ajax({
                         url: '@Url.Action("GetAvailableDentists", "Schedule")',
                         type: 'GET',
                         contentType: 'application/x-www-form-urlencoded',
-                        data: { startTime: startTimeInput.val(), duration: duration.val() },
+                        data: {
+                            date: dateInput.val(),
+                            startTime: startTimeInput.val(),
+                            endTime: endTimeInput.val()
+                        },
                         success: function (data) {
-                            $('#DentistList').empty();
+                            dentistList.empty();
                             data.forEach(x => {
-                                
-                                $('#DentistList').append($('<option></option>')
+                                dentistList.append($('<option></option>')
                                     .attr("value", x.id).text(x.fullName));
                             });
                         },
@@ -70,9 +81,12 @@
                             toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
                         }
                     });
-                });
+                }
+            }
+
+            dateInput.add(startTimeInput).add(endTimeInput).on('change', function () {
+                loadAvailableDentists();
             });
-            
         });
     </script>
-}                               
+}                     

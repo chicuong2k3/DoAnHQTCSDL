@@ -28,5 +28,11 @@ namespace Repositories
 
             return await dbContext.Customers.Where(x => x.AccountId == user.Id).SingleOrDefaultAsync();
 		}
+
+		public async Task<Customer?> GetCustomerByIdAsync(string id)
+		{
+
+			return await dbContext.Customers.FindAsync(id);
+		}
 	}
 }

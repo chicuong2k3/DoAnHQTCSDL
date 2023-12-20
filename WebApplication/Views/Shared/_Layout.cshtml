@@ -3,6 +3,7 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject Repositories.CustomerRepository CustomerRepository
+@inject Repositories.DentistRepository DentistRepository
 
 <!DOCTYPE html>
 <html>
@@ -75,6 +76,15 @@
                         var customerId = (await CustomerRepository.GetCustomerByAccountAsync(customer)).Id;
                         <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
                             Đặt lịch hẹn
+                        </a>
+
+                    }
+                    else if (User.IsInRole("Dentist"))
+                    {
+                        var dentist = await UserManager.GetUserAsync(User);
+                        var dentistId = (await DentistRepository.GetDentistByAccountAsync(dentist)).Id;
+                        <a asp-controller="Schedule" asp-action="ListAppointmentSchedules" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
+                            Xem danh sách lịch hẹn
                         </a>
 
                     }
