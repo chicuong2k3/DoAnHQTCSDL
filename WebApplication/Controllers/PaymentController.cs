@@ -9,28 +9,28 @@ namespace WebApplication.Controllers
 {
 	public class PaymentController : Controller
 	{
-		private MedicalReportRespository medicalReportRespository;
+		private MedicalRecordRespository medicalRecordRespository;
 		private AppDbContext appDbContext;
-		public PaymentController(MedicalReportRespository medicalReportRespository, AppDbContext appDbContext)
+		public PaymentController(MedicalRecordRespository medicalRecordRespository, AppDbContext appDbContext)
 		{	
-			this.medicalReportRespository = medicalReportRespository;
+			this.medicalRecordRespository = medicalRecordRespository;
 			this.appDbContext = appDbContext;
 		}
-		public IActionResult MedicalReport()
+		public IActionResult MedicalRecord()
 		{
 			return View();
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> MedicalReport(PhoneModel model)
+		public async Task<IActionResult> MedicalRecord(PhoneModel model)
 		{
 			if(ModelState.IsValid)
 			{
-				MedicalRecord? res = await medicalReportRespository.GetMedicalReportByPhoneCustomer(model.PhoneNumber);
+				MedicalRecord? res = await medicalRecordRespository.GetMedicalRecordByPhoneCustomer(model.PhoneNumber);
 				if(res != null)
 				{
-					TempData["medicalReport"] = res;
-					return RedirectToAction("ViewMedicalReport");
+					TempData["medicalRecord"] = res;
+					return RedirectToAction("ViewMedicalRecord");
 				}
 				else
 				{
@@ -41,9 +41,9 @@ namespace WebApplication.Controllers
 			return View(model);
 		}
 
-		public IActionResult ViewMedicalReport()
+		public IActionResult ViewMedicalRecord()
 		{
-			MedicalRecord record = (MedicalRecord)TempData["medicalReport"];
+			MedicalRecord record = (MedicalRecord)TempData["medicalRecord"];
 			return View(record);
 		}
 

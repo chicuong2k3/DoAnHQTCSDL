@@ -2,37 +2,35 @@
 using DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Repositories;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-    public class MedicalReportController : Controller
+    public class MedicalRecordController : Controller
     {
         private IMapper mapper;
-        private MedicalReportRespository medicalReportRespository;
+        private MedicalRecordRespository medicalRecordRespository;
         private UserManager<AppUser> userManager;
         private CustomerRepository customerRepository;
 
-        public MedicalReportController(IMapper mapper, 
-            MedicalReportRespository medicalReportRespository,
+        public MedicalRecordController(IMapper mapper, 
+            MedicalRecordRespository medicalRecordRespository,
             CustomerRepository customerRepository)
         {
             this.mapper = mapper;
-            this.medicalReportRespository = medicalReportRespository;
+            this.medicalRecordRespository = medicalRecordRespository;
             this.customerRepository = customerRepository;
         }
 
         public async Task<IActionResult> Index(string id)
         {
-            var model = await medicalReportRespository.GetByIdDentist(id);
+            var model = await medicalRecordRespository.GetByIdDentist(id);
             return View(model);
         }
 
-        public async Task<IActionResult> AddMedicalReport(string id)
+        public async Task<IActionResult> AddMedicalRecord(string id)
         {
             ViewBag.id = id;
             ViewBag.SelectService = new List<SelectListItem>()
@@ -53,7 +51,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddMedicalReport(MedicalReportModel model)
+        public async Task<IActionResult> AddMedicalRecord(MedicalRecordModel model)
         {
             if (ModelState.IsValid)
             {
@@ -70,13 +68,13 @@ namespace WebApplication.Controllers
                 }
                 item.CustomerId = targetCus.Id;
                 item.ServicePrice = 100000;
-                var recordMedical = await medicalReportRespository.GetLatestMedicalReportByCustomerId(item.CustomerId);
+                var recordMedical = await medicalRecordRespository.GetLatestMedicalRecordByCustomerId(item.CustomerId);
                 if(recordMedical == null)
                 {
-                    var medicalReport = await medicalReportRespository.GetMaxId();
-                    if(medicalReport != null)
+                    var medicalRecord = await medicalRecordRespository.GetMaxId();
+                    if(medicalRecord != null)
                     {
-                        item.Id = medicalReport.Id + 1;
+                        item.Id = medicalRecord.Id + 1;
                         item.SequenceNumber = 1;
                     }
                     else
@@ -90,8 +88,8 @@ namespace WebApplication.Controllers
                     item.Id = recordMedical.Id;
                     item.SequenceNumber = recordMedical.SequenceNumber + 1;
                 }
-                await medicalReportRespository.Add(item);
-                return Redirect($"/MedicalReport/Index/{model.CreatedByDentistId}");
+                await medicalRecordRespository.Add(item);
+                return Redirect($"/MedicalRecord/Index/{model.CreatedByDentistId}");
             }
             ViewBag.SelectService = new List<SelectListItem>()
             {

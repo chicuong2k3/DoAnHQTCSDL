@@ -9,7 +9,7 @@
 	var idDentist = (await DentistRepository.GetDentistByAccountAsync(AccountDentist)).Id; 
 }
 
-<a class="btn btn-success mb-3 text-light" asp-controller="MedicalReport" asp-action="AddMedicalReport"
+<a class="btn btn-success mb-3 text-light" asp-controller="MedicalRecord" asp-action="AddMedicalRecord"
 asp-route-id ="@idDentist">
 	<i class="icon-copy fa fa-plus-square-o" aria-hidden="true"></i>
 	<span class="mx-1">Tạo item mới</span>
@@ -39,7 +39,7 @@ asp-route-id ="@idDentist">
 					<td>@item.CustomerId</td>
 					<td>@item.ExamDentistId</td>
 					<td>
-						<a class="btn btn-warning text-light btn-edit-medical-report" data-id ="@item.Id" data-sequence ="@item.SequenceNumber">
+						<a class="btn btn-warning text-light btn-edit-medical-Record" data-id ="@item.Id" data-sequence ="@item.SequenceNumber">
 							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
 						</a>
 					</td>
@@ -106,7 +106,7 @@ asp-route-id ="@idDentist">
 				$('#confirmation-modal .yes-btn').off('click').on('click', function () {
 					hideModal();
 					$.ajax({
-						url: '@Url.Action("Delete", "MedicalReport")',
+						url: '@Url.Action("Delete", "MedicalRecord")',
 						type: 'POST',
 						contentType: 'application/x-www-form-urlencoded',
 						data: { id: id , sequence : sequence},
@@ -134,11 +134,11 @@ asp-route-id ="@idDentist">
 				modal.modal('hide');
 			}
 
-			$(".btn-edit-medical-report").first().click(() => {
+			$(".btn-edit-medical-Record").first().click(() => {
 				let id = $(this).attr("data-id");
 				let sequence = $(this).attr("data-sequence");
 				$.ajax({
-					url: '@Url.Action("Edit", "MedicalReport")',
+					url: '@Url.Action("Edit", "MedicalRecord")',
 					type: 'POST',
 					contentType: 'application/x-www-form-urlencoded',
 					data: { id: id, sequence:sequence},

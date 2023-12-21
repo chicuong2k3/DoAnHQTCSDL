@@ -90,13 +90,13 @@
                             Xem danh sách lịch hẹn
                         </a>
 
-                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalReport" asp-action="Index" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
+                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="Index" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
                             Hồ sơ bệnh nhân
                         </a>
                     }
                     else if(User.IsInRole("Employee"))
                     {
-                        <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="MedicalReport" class="dropdown-toggle no-arrow">
+                        <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="MedicalRecord" class="dropdown-toggle no-arrow">
                             Thanh Toán
                         </a>
                         <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="CreateSchedule" class="dropdown-toggle no-arrow">
@@ -151,11 +151,6 @@
         <div class="pd-ltr-20">
             <div class="card-box pd-20 height-100-p mb-30">
                 @RenderBody()
-            </div>
-
-
-            <div class="footer-wrap pd-20 mb-20 card-box">
-                @ViewData["Title"]
             </div>
         </div>
 

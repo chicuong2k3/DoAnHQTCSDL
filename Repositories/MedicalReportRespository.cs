@@ -1,24 +1,17 @@
 ﻿using DataModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Repositories
 {
-    public class MedicalReportRespository
+    public class MedicalRecordRespository
     {
         private AppDbContext dbContext;
-        public MedicalReportRespository(AppDbContext dbContext)
+        public MedicalRecordRespository(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        public async Task<MedicalRecord?> GetMedicalReportByPhoneCustomer(string PhoneNumber)
+        public async Task<MedicalRecord?> GetMedicalRecordByPhoneCustomer(string PhoneNumber)
         {
             try
             {
@@ -71,7 +64,7 @@ namespace Repositories
             return 0;
         }
 
-        public async Task<MedicalRecord?> GetLatestMedicalReportByCustomerId(string customerId)
+        public async Task<MedicalRecord?> GetLatestMedicalRecordByCustomerId(string customerId)
         {
             var target = await dbContext.MedicalRecords.Where(mr => mr.CustomerId == customerId)
                 .OrderByDescending(mr => mr.SequenceNumber).FirstOrDefaultAsync();

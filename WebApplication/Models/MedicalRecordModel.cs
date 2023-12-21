@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    public class MedicalReportModel
+    public class MedicalRecordModel
     {
 		public DateOnly ExaminationDate { get; set; }
 		public string Service { get; set; }
