@@ -7,7 +7,7 @@ namespace DataModels
     {
         public int Id { get; set; }
         public int SequenceNumber { get; set; }
-        public DateTime ExaminationDate { get; set; }
+        public DateOnly ExaminationDate { get; set; }
         public string Service { get; set; }
         public decimal ServicePrice { get; set; }
 

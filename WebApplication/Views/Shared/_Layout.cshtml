@@ -86,10 +86,22 @@
                     {
                         var dentist = await UserManager.GetUserAsync(User);
                         var dentistId = (await DentistRepository.GetDentistByAccountAsync(dentist)).Id;
-                        <a asp-controller="Schedule" asp-action="ListAppointmentSchedules" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
+                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="Schedule" asp-action="ListAppointmentSchedules" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
                             Xem danh sách lịch hẹn
                         </a>
 
+                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalReport" asp-action="Index" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
+                            Hồ sơ bệnh nhân
+                        </a>
+                    }
+                    else if(User.IsInRole("Employee"))
+                    {
+                        <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="MedicalReport" class="dropdown-toggle no-arrow">
+                            Thanh Toán
+                        </a>
+                        <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="CreateSchedule" class="dropdown-toggle no-arrow">
+                            Lập Lịch Khách Hàng
+                        </a>
                     }
                 }
                 else

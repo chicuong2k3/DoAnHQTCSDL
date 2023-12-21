@@ -11,6 +11,12 @@ namespace Repositories
         {
             this.dbContext = dbContext;
         }
+
+        public async Task<List<Customer>> GetAll ()
+        {
+            return await dbContext.Customers.ToListAsync();
+        }
+
         public async Task AddCustomerAsync(Customer customer)
         {
             await dbContext.Customers.AddAsync(customer);
@@ -34,5 +40,11 @@ namespace Repositories
 
 			return await dbContext.Customers.FindAsync(id);
 		}
+        public async Task<Customer?> GetCustomerByPhoneNumber(string phoneNumber )
+        {
+            var target = await dbContext.Customers.Where(c => c.PhoneNumber == phoneNumber)
+                .FirstOrDefaultAsync();
+            return target;
+        }
 	}
 }
