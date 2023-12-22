@@ -46,6 +46,7 @@ namespace Repositories
             if(target != null)
             {
                 dbContext.MedicalRecords.Remove(target);
+                await dbContext.SaveChangesAsync();
                 return 1;
             }
             return 0;

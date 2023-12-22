@@ -1,0 +1,69 @@
+﻿@model EditMedicalRecordModel
+
+@{
+    ViewData["Title"] = "Create New MedicalRecord";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Add MedicineRecord</h4>
+                <div class="text-danger" asp-validation-summary="All"></div>
+                <form method="post">
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="Id"></label>
+                        <input class="form-control" asp-for="Id" value = "@ViewBag.id">
+                        <span class="form-control-feedback text-danger" asp-validation-for="Id"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="SequenceNumber"></label>
+                        <input class="form-control" asp-for="SequenceNumber" value ="@ViewBag.sequence">
+                        <span class="form-control-feedback text-danger" asp-validation-for="SequenceNumber"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="ExaminationDate"></label>
+                        <input class="form-control" type="date" asp-for="ExaminationDate">
+                        <span class="form-control-feedback text-danger" asp-validation-for="ExaminationDate"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="Service"></label>
+                        <select asp-for="Service" asp-items="@ViewBag.service">
+                        </select>
+                        <span class="form-control-feedback text-danger" asp-validation-for="Service"></span>
+                    </div>
+                    <div class="form-group mb-3" style="display : none">
+                        <label class="form-control-label" asp-for="CustomerId"></label>
+                        <select asp-for="CustomerId" asp-items="@ViewBag.customer">
+                        </select>
+                        <span class="form-control-feedback text-danger" asp-validation-for="CustomerId"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="CreatedByDentistId"></label>
+                        <select asp-for="CreatedByDentistId" asp-items="@ViewBag.dentistCreate">
+                        </select>
+                        <span class="form-control-feedback text-danger" asp-validation-for="CreatedByDentistId"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-control-label" asp-for="ExamDentistId"></label>
+                        <select asp-for="ExamDentistId" asp-items="@ViewBag.dentistExam">
+                        </select>
+                        <span class="form-control-feedback text-danger" asp-validation-for="ExamDentistId"></span>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-success btn-block btn-rounded">
+                                Save
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <a asp-controller="MedicalRecord" asp-action="Index" type="button" class="btn btn-danger btn-block btn-rounded">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -31,7 +31,7 @@ asp-route-id ="@idDentist">
 		<tbody>
 			@foreach (var item in Model)
 			{
-				<tr>
+				<tr id ="row-@item.Id-@item.SequenceNumber">
 					<th>@item.Id</th>
 					<td>@item.SequenceNumber</td>
 					<td>@item.ExaminationDate</td>
@@ -39,7 +39,7 @@ asp-route-id ="@idDentist">
 					<td>@item.CustomerId</td>
 					<td>@item.ExamDentistId</td>
 					<td>
-						<a class="btn btn-warning text-light btn-edit-medical-Record" data-id ="@item.Id" data-sequence ="@item.SequenceNumber">
+						<a class="btn btn-warning text-light btn-edit-medical-Record" href="/MedicalRecord/Edit?id=@item.Id&sequence=@item.SequenceNumber&idDentistCreate=@item.CreatedByDentistId&idExamDentist=@item.ExamDentistId&idCustomer=@item.CustomerId">
 							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
 						</a>
 					</td>
@@ -102,6 +102,7 @@ asp-route-id ="@idDentist">
 		$(document).ready(function () {
 			$('.delete-confirm-btn').on('click', function () {
 				let id = $(this).attr('data-id');
+				let sequence = $(this).attr("data-sequence");
 				showModal(id);
 				$('#confirmation-modal .yes-btn').off('click').on('click', function () {
 					hideModal();
@@ -111,7 +112,7 @@ asp-route-id ="@idDentist">
 						contentType: 'application/x-www-form-urlencoded',
 						data: { id: id , sequence : sequence},
 						success: function (data) {
-							$(`#row-${id}`).remove();
+							$(`#row-${id}-${sequence}`).remove();
 							toastr.success(data, 'Notification', { timeOut: 2000 });
 						},
 						error: function (error) {
