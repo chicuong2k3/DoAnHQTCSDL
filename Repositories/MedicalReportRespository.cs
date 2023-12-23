@@ -64,7 +64,7 @@ namespace Repositories
             (mr.Id == model.Id && mr.SequenceNumber == model.SequenceNumber)).FirstOrDefaultAsync();
             if(target != null )
             {
-                dbContext.Entry(target).CurrentValues.SetValues(model);
+                dbContext.MedicalRecords.Entry(target).CurrentValues.SetValues(model);
                 await dbContext.SaveChangesAsync();
                 return 1;
             }

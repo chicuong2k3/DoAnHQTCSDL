@@ -2,7 +2,7 @@
 using DataModels;
 using WebApplication.Models;
 
-namespace WebApplication.Congif
+namespace WebApplication.Congfig
 {
     public class ConfigAutoMapper : Profile
     {

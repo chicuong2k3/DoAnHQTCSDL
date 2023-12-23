@@ -32,14 +32,14 @@
                         </select>
                         <span class="form-control-feedback text-danger" asp-validation-for="Service"></span>
                     </div>
-                    <div class="form-group mb-3" style="display : none">
+                    <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="CustomerId"></label>
                         <select asp-for="CustomerId" asp-items="@ViewBag.customer">
                         </select>
                         <span class="form-control-feedback text-danger" asp-validation-for="CustomerId"></span>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="form-control-label" asp-for="CreatedByDentistId"></label>
+                        <label class="form-control-label" asp-for="CreatedByDentistId" ></label>
                         <select asp-for="CreatedByDentistId" asp-items="@ViewBag.dentistCreate">
                         </select>
                         <span class="form-control-feedback text-danger" asp-validation-for="CreatedByDentistId"></span>

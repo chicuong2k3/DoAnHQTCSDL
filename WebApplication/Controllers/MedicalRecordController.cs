@@ -33,6 +33,7 @@ namespace WebApplication.Controllers
 
 		public async Task<IActionResult> Index(string dentistId)
         {
+            ViewBag.id = dentistId;
             var model = await medicalRecordRespository.GetByIdDentist(dentistId);
             return View(model);
         }

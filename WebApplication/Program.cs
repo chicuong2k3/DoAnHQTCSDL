@@ -4,7 +4,8 @@ using DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
-using WebApplication.Congif;
+using WebApplication.Congfig;
+using DataModels.Config;
 
 namespace WebApplication
 {
@@ -38,14 +39,16 @@ namespace WebApplication
 				options.AccessDeniedPath = "/Account/AccessDenied";
 			});
 
-			builder.Services.AddScoped<CustomerRepository>();
+            builder.Services.AddSingleton<DapperContext>();
+
+            builder.Services.AddScoped<CustomerRepository>();
 			builder.Services.AddScoped<DentistRepository>();
 			builder.Services.AddScoped<EmployeeRepository>();
 			builder.Services.AddScoped<AppointmentScheduleRepository>();
 			builder.Services.AddScoped<MedicineRepository>();
 			builder.Services.AddScoped<MedicineInventoryRepository>();
 			builder.Services.AddScoped<MedicalRecordRespository>();
-
+			builder.Services.AddScoped<MedicineMedicalRecordRespository>();
 			// Auto Mapper Configurations
 			var mapperConfig = new MapperConfiguration(mc =>
 			{
