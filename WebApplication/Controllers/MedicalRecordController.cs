@@ -37,6 +37,12 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> MedicalRecordOfCustomer(string customerId)
+        {
+            var model = await medicalRecordRespository.GetByIdCustomer(customerId);
+            return View("Index", model);
+        }
+
         public async Task<IActionResult> AddMedicalRecord(string id)
         {
             ViewBag.id = id;

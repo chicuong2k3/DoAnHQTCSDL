@@ -80,7 +80,9 @@
                         <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
                             Đặt lịch hẹn
                         </a>
-
+                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="MedicalRecordOfCustomer" asp-route-dentistId="@customerId" class="btn btn-info" style="height: 40px">
+                            Hồ sơ bệnh án
+                        </a>
                     }
                     else if (User.IsInRole("Dentist"))
                     {

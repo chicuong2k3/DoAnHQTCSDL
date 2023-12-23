@@ -33,6 +33,12 @@ namespace Repositories
             return await dbContext.MedicalRecords.Where(mr => mr.ExamDentistId == IdDentist).ToListAsync();
         }
 
+        public async Task<List<MedicalRecord>> GetByIdCustomer(string customerId)
+        {
+            return await dbContext.MedicalRecords.Where(mr => mr.CustomerId == customerId)
+                .OrderByDescending(c => c.ExaminationDate)
+                .ToListAsync();
+        }
         public async Task Add(MedicalRecord model)
         {
             await dbContext.MedicalRecords.AddAsync(model);
