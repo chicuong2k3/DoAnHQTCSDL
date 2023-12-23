@@ -2,27 +2,26 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> UserManager
 @inject Repositories.DentistRepository DentistRepository
+@inject Repositories.CustomerRepository CustomerRepository
 @model List<MedicalRecord>
 @{
-	ViewData["Title"] = "Danh sách Bệnh Án";
+	ViewData["Title"] = "Danh sách bệnh án";
 	var AccountDentist = await UserManager.GetUserAsync(User);
 }
 
-<a class="btn btn-warning text-light"
-   href="/MedicalRecord/AddMedicalRecord/?id=@ViewBag.id"
-	<i class="icon-copy fa fa-edit" aria-hidden="true">Add Medical Record</i>
+<a class="btn btn-warning text-light mb-3" asp-controller="MedicalRecord"
+   asp-action="AddMedicalRecord" asp-route-id="@ViewBag.id">
+	<i class="icon-copy fa fa-edit" aria-hidden="true">Thêm hồ sơ bệnh án</i>
 </a>
 
 <div class="table-responsive">
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th scope="col">Id</th>
 				<th scope="col">Lần khám</th>
 				<th scope="col">Ngày khám</th>
 				<th scope="col">Dịch vụ</th>
-				<th scope="col">CustomerId</th>
-				<th scope="col">DentistExamID</th>
+				<th scope="col">Bệnh nhân</th>
 				<th>Kê đơn</th>
 				<th></th>
 				<th></th>
@@ -31,13 +30,17 @@
 		<tbody>
 			@foreach (var item in Model)
 			{
-				<tr id ="row-@item.Id-@item.SequenceNumber">
-					<th>@item.Id</th>
+				<tr id="row-@item.Id-@item.SequenceNumber">
 					<td>@item.SequenceNumber</td>
 					<td>@item.ExaminationDate</td>
 					<td>@item.Service</td>
-					<td>@item.CustomerId</td>
-					<td>@item.ExamDentistId</td>
+					<td>
+						@{
+							var customer = await CustomerRepository.GetCustomerByIdAsync(item.CustomerId);
+							var customerName = customer.FullName;
+						}
+						@customerName
+					</td>
 					<td>
 						<a class="btn btn-warning text-light" 
 						href="/Prescription/Index?id=@item.Id&sequence=@item.SequenceNumber">
@@ -65,7 +68,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-body text-center font-18">
-				<h4 class="padding-top-30 mb-30 weight-500">Are you sure you want to delete this medical record?</h4>
+				<h4 class="padding-top-30 mb-30 weight-500">Bạn có chắc chắn muốn xóa hồ sơ bệnh nhân này?</h4>
 				<div class="padding-bottom-30 row" style="max-width: 170px; margin: 0 auto;">
 					<div class="col-6">
 						<button type="button" class="btn btn-secondary border-radius-100 btn-block confirmation-btn" data-dismiss="modal"><i class="fa fa-times"></i></button>

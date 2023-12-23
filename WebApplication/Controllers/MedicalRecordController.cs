@@ -3,7 +3,6 @@ using DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using Repositories;
 using WebApplication.Models;
 
@@ -69,7 +68,7 @@ namespace WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                MedicalRecord item = new MedicalRecord();
+                var item = new MedicalRecord();
                 item.CreatedByDentistId = model.CreatedByDentistId;
                 item.ExamDentistId = model.CreatedByDentistId;
                 item.ExaminationDate = model.ExaminationDate;
