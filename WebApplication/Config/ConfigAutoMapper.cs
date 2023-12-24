@@ -11,6 +11,8 @@ namespace WebApplication.Congfig
             CreateMap<Medicine, CreateMedicineModel>().ReverseMap();
             CreateMap<MedicineInventory, MedicineInventoryModel>().ReverseMap();
             CreateMap<MedicalRecord, EditMedicalRecordModel>().ReverseMap();
+            CreateMap<MedicineMedicalRecordModel, Medicine_MedicalRecord>().ReverseMap();
+            CreateMap<Customer, CustomerModel>().ReverseMap();
         }
     }
 }

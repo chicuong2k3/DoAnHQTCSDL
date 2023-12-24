@@ -13,19 +13,11 @@ namespace Repositories
 
         public async Task<MedicalRecord?> GetMedicalRecordByPhoneCustomer(string PhoneNumber)
         {
-            try
-            {
             var target = await dbContext.Customers.Where(c => c.PhoneNumber == PhoneNumber)
-                .Select(c => dbContext.MedicalRecords.Where(mr => mr.CustomerId == c.Id).FirstOrDefault())
-                .OrderByDescending(c => c.SequenceNumber)
+            .FirstOrDefaultAsync();
+            var final = await dbContext.MedicalRecords.Where(mr => mr.CustomerId == target.Id)
                 .FirstOrDefaultAsync();
-                return target;
-            }
-            catch (Exception ex)
-            {
-                await Console.Out.WriteLineAsync(ex.Message);
-                return null;
-            }
+            return final;
         }
         
         public async Task<List<MedicalRecord>> GetByIdDentist(string IdDentist)

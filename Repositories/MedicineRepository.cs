@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,5 +58,23 @@ namespace Repositories
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<(Medicine, int)>> GetAllQuantityInventory()
+        {
+            var resultQuery = await dbContext.MedicineInventories
+                .Where(mi => mi.ExpiryDate > DateOnly.FromDateTime(DateTime.Now))
+                .GroupBy(mi => mi.MedicineId)
+                .Select(group => new
+                {
+                    sum = group.Sum(x => x.InventoryQuantity),
+                    med = dbContext.Medicines.Where(med => med.Id == group.Key).FirstOrDefault()
+                })
+                .ToListAsync();
+            var final = new List<(Medicine, int)>();
+            foreach (var item in resultQuery)
+            {
+                final.Add((item.med, item.sum));
+            }
+            return final;
+        }
     }
 }

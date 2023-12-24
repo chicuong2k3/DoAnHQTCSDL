@@ -16,35 +16,15 @@ namespace WebApplication.Controllers
 			this.medicalRecordRespository = medicalRecordRespository;
 			this.appDbContext = appDbContext;
 		}
-		public IActionResult MedicalRecord()
+		public IActionResult Index()
 		{
 			return View();
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> MedicalRecord(PhoneModel model)
-		{
-			if(ModelState.IsValid)
-			{
-				MedicalRecord? res = await medicalRecordRespository.GetMedicalRecordByPhoneCustomer(model.PhoneNumber);
-				if(res != null)
-				{
-					TempData["medicalRecord"] = res;
-					return RedirectToAction("ViewMedicalRecord");
-				}
-				else
-				{
-					ModelState.AddModelError(string.Empty, $"{model.PhoneNumber} not exists");
-					return View("error");
-				}
-			}
-			return View(model);
-		}
 
 		public IActionResult ViewMedicalRecord()
 		{
-			MedicalRecord record = (MedicalRecord)TempData["medicalRecord"];
-			return View(record);
+			return View();
 		}
 
 		public async Task<IActionResult> Bill(string customerId)
