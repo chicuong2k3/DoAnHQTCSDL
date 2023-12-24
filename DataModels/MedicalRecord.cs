@@ -10,10 +10,10 @@ namespace DataModels
         public DateOnly ExaminationDate { get; set; }
         public string Service { get; set; }
         public decimal ServicePrice { get; set; }
-
+        public string Status { set; get; }
         public Customer Customer { get; set; }
         [ForeignKey(nameof(Customer))]
-        public string CustomerId { get; set; }
+        public string CustomerId { get; set; } = "no";
         public Dentist? CreatedByDentist { get; set; }
         [ForeignKey(nameof(CreatedByDentist))]
         public string? CreatedByDentistId { get; set; }

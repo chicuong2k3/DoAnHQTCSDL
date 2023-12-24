@@ -1,6 +1,8 @@
 ﻿using DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Repositories;
 using WebApplication.Models;
@@ -11,19 +13,34 @@ namespace WebApplication.Controllers
 	{
 		private MedicalRecordRespository medicalRecordRespository;
 		private AppDbContext appDbContext;
-		public PaymentController(MedicalRecordRespository medicalRecordRespository, AppDbContext appDbContext)
+		private CustomerRepository customerRepository;
+		public PaymentController(MedicalRecordRespository medicalRecordRespository
+			, AppDbContext appDbContext, CustomerRepository customerRepository)
 		{	
 			this.medicalRecordRespository = medicalRecordRespository;
 			this.appDbContext = appDbContext;
+			this.customerRepository = customerRepository;
 		}
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			return View();
-		}
-
-
-		public IActionResult ViewMedicalRecord()
-		{
+			var result = await customerRepository.GetAll();
+			var result1 = from c in result.ToList()
+						  join m in appDbContext.MedicalRecords
+						  on c.Id equals m.CustomerId into mytable
+						  from item in mytable
+						  where item.Status == "no"
+						  select c;
+			result1 = result1.Distinct().ToList();
+			var list = new List<SelectListItem>();
+			foreach (var item in result1)
+			{
+				list.Add(new SelectListItem()
+				{
+					Value = item.Id,
+					Text = item.PhoneNumber
+				});
+			}
+			ViewBag.list = list;
 			return View();
 		}
 
@@ -39,16 +56,25 @@ namespace WebApplication.Controllers
 					.Select(item => new
 					{
 						quantity = item.MedicineQuantity,
-						medicine = appDbContext.Medicines.Where(m => m.Id.Equals(item.MedicineId)).FirstOrDefault()
-					})
-					.ToListAsync();
-				//create bill model
+						medicine = appDbContext.Medicines.Where(m => m.Id == item.MedicineId).FirstOrDefault()
+					}).ToListAsync();
 				model.NameService = medicalRecord.Service;
 				model.SerVicePrice = medicalRecord.ServicePrice;
-				decimal Total = model.SerVicePrice;
+				//create bill model
+				if(getListMedicine == null || getListMedicine.Count == 0) {
+					return View(model);
+				}
+				//update trang thai da thanh toan chi phi
+                var temMr = medicalRecord;
+                temMr.Status = "yes";
+                appDbContext.MedicalRecords.Entry(medicalRecord).CurrentValues.SetValues(temMr);
+				await appDbContext.SaveChangesAsync();
+				//
+                decimal Total = medicalRecord.ServicePrice;
+				model.medicines = new List<MyMedicine>();
 				foreach (var item in getListMedicine)
 				{
-					model.Medicines.Add(new MyMedicine()
+					model.medicines.Add(new MyMedicine()
 					{
 						Name = item.medicine.Name,
 						Quantity = item.quantity,
@@ -58,7 +84,6 @@ namespace WebApplication.Controllers
 				}
 				model.Total = Total;
 			}
-
 			return View(model);
 		}
     }

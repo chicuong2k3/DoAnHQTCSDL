@@ -11,7 +11,7 @@
     {
         public string NameService { get; set; }
         public decimal SerVicePrice { set; get; }
-        public List<MyMedicine> Medicines { get; set; }
+        public List<MyMedicine> medicines { get; set; }
         public decimal Total {  get; set; }
     }
 }

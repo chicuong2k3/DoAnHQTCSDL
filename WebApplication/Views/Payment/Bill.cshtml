@@ -1,7 +1,7 @@
 ﻿@model BillModel
 @{
     ViewData["title"] = "Hoa don";
-};
+}
 
 <div class="table-responsive">
 	<h3>Hóa đơn thanh toán</h3>
@@ -16,13 +16,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var item in Model.Medicines)
+			@if(Model.medicines != null)
 			{
-				<tr>
-					<td>@item.Name</td>
-					<td>@item.Price</td>
-					<td>@item.Quantity</td>
-				</tr>
+				@foreach (var item in Model.medicines)
+				{
+					<tr>
+						<td>@item.Name</td>
+						<td>@item.Price</td>
+						<td>@item.Quantity</td>
+					</tr>
+				}
 			}
 		</tbody>
 	</table>
