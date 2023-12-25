@@ -1,5 +1,6 @@
 ﻿using DataModels;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace Repositories
 {
@@ -17,6 +18,15 @@ namespace Repositories
 			return await dbContext.AppointmentSchedules
 				.Where(x => x.DentistId == dentistId).ToListAsync();
 		}
+
+        public async Task<List<AppointmentSchedule>> GetAppointmentsOfCustomer(string customerId)
+        {
+            return await dbContext.AppointmentSchedules
+                .Where(x => !string.IsNullOrEmpty(x.CustomerId) 
+				&& x.CustomerId == customerId
+				&& x.StartTime >= DateTime.Now)
+				.ToListAsync();
+        }
 
         public async Task AddAppoinment(AppointmentSchedule appointment)
         {
@@ -36,15 +46,22 @@ namespace Repositories
 				.Where(x => x.DentistId == dentistId && x.StartTime == startTime).SingleOrDefaultAsync();
 		}
 
-		public async Task UpdateAsync(AppointmentSchedule schedule, DateTime sTime, DateTime eTime)
+		public async Task UpdateAsync(AppointmentSchedule schedule, DateTime sTime, DateTime eTime, string dentistId = null)
 		{
 			var newSchedule = new AppointmentSchedule()
 			{
 				StartTime = sTime,
 				EndTime = eTime,
-				DentistId = schedule.DentistId,
 				CustomerId = schedule.CustomerId
 			};
+			if (dentistId == null)
+			{
+				newSchedule.DentistId = schedule.DentistId;
+			}
+			else
+			{
+				newSchedule.DentistId = dentistId;
+			}
             dbContext.AppointmentSchedules.Remove(schedule);
             await dbContext.SaveChangesAsync();
             dbContext.AppointmentSchedules.Add(newSchedule);

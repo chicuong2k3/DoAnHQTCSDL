@@ -43,7 +43,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-left">
+        <div class="header-left" style="width: 70%">
             <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Home" asp-action="Index" class="dropdown-toggle no-arrow">
                 Trang chủ
             </a>
@@ -77,10 +77,13 @@
                     {
                         var customer = await UserManager.GetUserAsync(User);
                         var customerId = (await CustomerRepository.GetCustomerByAccountAsync(customer)).Id;
-                        <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
+                        <a class="btn btn-info" asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" style="height: 40px">
                             Đặt lịch hẹn
                         </a>
-                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="MedicalRecordOfCustomer" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
+                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="Schedule" asp-action="GetCustomerSchedules" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
+                            Danh sách lịch hẹn
+                        </a>
+                        <a class="btn btn-secondary d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="MedicalRecordOfCustomer" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
                             Hồ sơ bệnh án
                         </a>
                     }
@@ -115,16 +118,16 @@
                 }
             </div>
         </div>
-        <div class="header-right">
+        <div class="header-right" style="width: 30%">
 
             @if (SignInManager.IsSignedIn(User))
             {
 
                 <div class="d-flex flex-row align-items-center">
-                    <span class="badge bg-warning text-light mx-3 fw-500 fs-3">@User.Identity.Name</span>
+                    
                     @if (!User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-primary mx-3" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name"><i class="dw dw-user1"></i>Thông tin tài khoản</a>
+                        <a class="btn btn-primary mx-3" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name">Tài khoản</a>
                     }
                     <form asp-controller="Account" asp-action="Logout" method="post">
                         <button type="submit" class="btn btn-success mx-3">Đăng xuất</button>

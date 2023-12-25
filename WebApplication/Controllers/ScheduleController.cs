@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Repositories;
 using System.Data;
 using WebApplication.Models;
@@ -235,5 +236,95 @@ namespace WebApplication.Controllers
 			return View(model);
 		}
 
+		#region Schedules of customer
+		[Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetCustomerSchedules(string customerId)
+		{
+			var schedules = await appointmentScheduleRepository.GetAppointmentsOfCustomer(customerId);
+			return View(schedules);
+        }
+
+		[Authorize(Roles = "Customer")]
+		public async Task<IActionResult> EditSchedule(string dentistId, string customerId, string startTimeStr)
+		{
+			ViewData["CustomerId"] = customerId;
+			
+
+			if (!DateTime.TryParse(startTimeStr, out DateTime startTime))
+			{
+				return BadRequest("Invalid startTime format");
+			}
+
+			var schedule = await appointmentScheduleRepository.FindAsync(dentistId, startTime);
+			if (schedule == null)
+			{
+				return BadRequest();
+			}
+
+			var model = new ScheduleModel()
+			{
+				Date = schedule.StartTime,
+				StartTime = schedule.StartTime,
+				EndTime = schedule.EndTime,
+				DentistId = schedule.DentistId
+			};
+
+			var dentistList = await dentistRepository.GetAllAsync();
+			var selectListDentists = new List<SelectListItem>();
+			var selectedDentist = await dentistRepository.GetDentistByIdAsync(dentistId);
+			selectListDentists.Add(new SelectListItem(selectedDentist.FullName, dentistId));
+
+            foreach (var dentist in dentistList)
+			{
+				if (dentist.Id != dentistId)
+				{
+                    selectListDentists.Add(new SelectListItem(dentist.FullName, dentist.Id));
+                }
+            }
+			ViewData["DentistList"] = selectListDentists;
+
+
+            ViewData["OldStartTime"] = startTime.ToString();
+            ViewData["OldDentistId"] = dentistId;
+			return View(model);
+		}
+
+		[Authorize(Roles = "Customer")]
+		[HttpPost]
+		public async Task<IActionResult> EditSchedule(ScheduleModel model, string oldDentistId, string oldStartTimeStr)
+		{
+			if (ModelState.IsValid)
+			{
+				if (!DateTime.TryParse(oldStartTimeStr, out DateTime oldStartTime))
+				{
+					return BadRequest("Invalid oldStartTime format");
+				}
+
+				var schedule = await appointmentScheduleRepository
+					.FindAsync(oldDentistId, oldStartTime);
+				if (schedule == null) return BadRequest();
+
+				DateTime sTime = new DateTime(
+					model.Date.Year,
+					model.Date.Month,
+					model.Date.Day,
+					model.StartTime.Hour,
+					model.StartTime.Minute,
+					model.StartTime.Second
+				);
+				DateTime eTime = new DateTime(
+					model.Date.Year,
+					model.Date.Month,
+					model.Date.Day,
+					model.EndTime.Hour,
+					model.EndTime.Minute,
+					model.EndTime.Second
+				);
+				await appointmentScheduleRepository.UpdateAsync(schedule, sTime, eTime, model.DentistId);
+				return RedirectToAction("GetCustomerSchedules", new { customerId = schedule.CustomerId});
+			}
+			return View(model);
+		}
+		#endregion
 	}
 }
