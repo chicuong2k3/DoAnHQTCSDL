@@ -3,10 +3,10 @@
 @model List<(Medicine, int)>
 
 <div>
-    <input id = "id" value="@ViewBag.id"/>
-    <input id ="sequence" value = "@ViewBag.sequence"/>
+    <input type="hidden" id="id" value="@ViewBag.id"/>
+    <input type="hidden" id="sequence" value="@ViewBag.sequence" />
     <div id="listMedicine">
-        <div class="item">
+        <div class="item mb-3">
             <label>Loại thuốc : </label>
             <select class ="medicine" style = "height : 50px; width : 200px">
                 @for(int i = 0;i < Model.Count; i++)
@@ -27,7 +27,7 @@
 	<script type="module">
         $("#addMedicine").click(() => {
             $("#listMedicine").append(`
-                <div class="item">
+                <div class="item mb-3">
                     <label>Loại thuốc : </label>
                     <select class ="medicine" style = "height : 50px; width : 200px">
                     @for (int i = 0; i < Model.Count; i++)

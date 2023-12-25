@@ -158,11 +158,11 @@ namespace WebApplication.Controllers
             var allDentist = await dentistRepository.GetAllAsync();
             var dentistCreate = new List<SelectListItem>()
             {
-                new SelectListItem() {Value = idDentistCreate, Text = "Not change"}
+                new SelectListItem() {Value = idDentistCreate, Text = "Không thay đổi"}
             };
             var dentistExam = new List<SelectListItem>()
             {
-                new SelectListItem() {Value = idExamDentist, Text = "Not change"}
+                new SelectListItem() {Value = idExamDentist, Text = "Không thay đổi"}
             };
             foreach (var item in allDentist)
             {
@@ -175,7 +175,7 @@ namespace WebApplication.Controllers
             var customer = await customerRepository.GetAll();
             var selectCustomer = new List<SelectListItem>()
             {
-                new SelectListItem(){Value = idCustomer, Text = "NOt change"}
+                new SelectListItem(){Value = idCustomer, Text = "Không thay đổi"}
             };
             foreach (var item in customer)
             {

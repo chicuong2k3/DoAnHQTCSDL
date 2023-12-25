@@ -9,10 +9,15 @@
 	var AccountDentist = await UserManager.GetUserAsync(User);
 }
 
-<a class="btn btn-warning text-light mb-3" asp-controller="MedicalRecord"
-   asp-action="AddMedicalRecord" asp-route-id="@ViewBag.id">
-	<i class="icon-copy fa fa-edit" aria-hidden="true">Thêm hồ sơ bệnh án</i>
-</a>
+@if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
+{
+	<a class="btn btn-warning text-light mb-3" asp-controller="MedicalRecord"
+	   asp-action="AddMedicalRecord" asp-route-id="@ViewBag.id">
+		<i class="icon-copy fa fa-edit" aria-hidden="true">Thêm hồ sơ bệnh án</i>
+	</a>
+
+}
+
 
 <div class="table-responsive">
 	<table class="table table-striped">
@@ -21,8 +26,16 @@
 				<th scope="col">Lần khám</th>
 				<th scope="col">Ngày khám</th>
 				<th scope="col">Dịch vụ</th>
-				<th scope="col">Bệnh nhân</th>
-				<th>Kê đơn</th>
+				@if (await UserManager.IsInRoleAsync(AccountDentist, "Customer"))
+				{
+					<th scope="col">Nha sĩ khám</th>
+				}
+				else
+				{
+					<th scope="col">Bệnh nhân</th>
+					<th>Kê đơn</th>
+				}
+				
 				<th></th>
 				<th></th>
 			</tr>
@@ -35,28 +48,46 @@
 					<td>@item.ExaminationDate</td>
 					<td>@item.Service</td>
 					<td>
-						@{
+						@if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
+						{
+							
 							var customer = await CustomerRepository.GetCustomerByIdAsync(item.CustomerId);
 							var customerName = customer.FullName;
+
+							<text>@customerName</text>
 						}
-						@customerName
+						else
+						{
+							var examDentist = await DentistRepository.GetDentistByIdAsync(item.ExamDentistId);
+							var examDentistName = examDentist.FullName;
+
+							<text>@examDentistName</text>
+						}
 					</td>
 					<td>
-						<a class="btn btn-warning text-light" 
-						href="/Prescription/Index?id=@item.Id&sequence=@item.SequenceNumber">
-							Kê đơn
-						</a>
+						@if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
+						{
+							<a class="btn btn-warning text-light"
+							   href="/Prescription/Index?id=@item.Id&sequence=@item.SequenceNumber">
+								Kê đơn
+							</a>
+						}
+						
 					</td>
 					<td>
-						<a class="btn btn-warning text-light"
-						   href="/MedicalRecord/Edit?id=@item.Id&sequence=@item.SequenceNumber&idDentistCreate=@item.CreatedByDentistId&idExamDentist=@item.ExamDentistId&idCustomer=@item.CustomerId">
-							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
-						</a>
-					</td>
-					<td>
-						<button data-id="@item.Id" data-sequence="@item.SequenceNumber" type="button" class="btn btn-danger text-light delete-confirm-btn">
-							<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
-						</button>
+					@if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
+					{
+						
+							<a class="btn btn-warning text-light"
+							   href="/MedicalRecord/Edit?id=@item.Id&sequence=@item.SequenceNumber&idDentistCreate=@item.CreatedByDentistId&idExamDentist=@item.ExamDentistId&idCustomer=@item.CustomerId">
+								<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
+								
+							</a>
+							<button data-id="@item.Id" data-sequence="@item.SequenceNumber" type="button" class="btn btn-danger text-light delete-confirm-btn">
+								<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
+							</button>
+						
+					}
 					</td>
 				</tr>
 			}
