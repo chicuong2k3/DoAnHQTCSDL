@@ -73,7 +73,7 @@ namespace DataModels
             string customerRoleId = "4fa697ec-6c32-4116-8c01-3a202463703f";
             string dentistRoleId = "39934cbd-ca9b-43a2-9028-192615dc638a";
             string employeeRoleId = "31234cbd-ca9b-45a2-9028-192615dc638a";
-            string adminId = "c6647262-ef40-40b3-af33-f89f80d35378";
+            
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
@@ -102,25 +102,44 @@ namespace DataModels
                 NormalizedName = "EMPLOYEE"
             });
 
-            var hasher = new PasswordHasher<AppUser>();
+			string adminId1 = "c6647262-ef40-40b3-af33-f89f80d35378";
+			var hasher = new PasswordHasher<AppUser>();
             builder.Entity<AppUser>().HasData(
             new AppUser
             {
-                Id = adminId,
-                UserName = "admin123",
-                NormalizedUserName = "ADMIN123",
-                PasswordHash = hasher.HashPassword(null, "admin123")
+                Id = adminId1,
+                UserName = "admin1",
+                NormalizedUserName = "ADMIN1",
+                PasswordHash = hasher.HashPassword(null, "admin1")
             });
 
-            builder.Entity<IdentityUserRole<string>>().HasData(
+			string adminId2 = "c6647262-ef40-40b3-af33-f89f80d34326";
+			builder.Entity<AppUser>().HasData(
+			new AppUser
+			{
+				Id = adminId2,
+				UserName = "admin2",
+				NormalizedUserName = "ADMIN2",
+				PasswordHash = hasher.HashPassword(null, "admin2")
+			});
+
+			builder.Entity<IdentityUserRole<string>>().HasData(
             new IdentityUserRole<string>
             {
 
                 RoleId = adminRoleId,
-                UserId = adminId
+                UserId = adminId1
             });
 
-            Randomizer.Seed = new Random(8675390);
+			builder.Entity<IdentityUserRole<string>>().HasData(
+			new IdentityUserRole<string>
+			{
+
+				RoleId = adminRoleId,
+				UserId = adminId2
+			});
+
+			Randomizer.Seed = new Random(8675390);
 
         }
 

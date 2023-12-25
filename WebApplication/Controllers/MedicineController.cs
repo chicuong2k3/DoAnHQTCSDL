@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
@@ -7,7 +8,8 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-    public class MedicineController : Controller
+	[Authorize(Roles = "Admin")]
+	public class MedicineController : Controller
     {
         private AppDbContext dbContext;
         private MedicineRepository medicineRepository;
@@ -18,28 +20,12 @@ namespace WebApplication.Controllers
             this.medicineRepository = medicine;
             this.mapper = mapper;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string text = "")
         {
-            var item = await medicineRepository.GetAllMedicine();
-            if (item == null)
-            {
-                var newmodel = new List<CreateMedicineModel>()
-                {
-                    new CreateMedicineModel()
-                    {
-                        Id = 1,
-                        Name = "Allerphast",
-                        Prescription = "Allerphast 180 mg là một sản phẩm của công ty cổ phần dược phẩm và sinh học y tế Mebiphar, thành phần chính chứa fexofenadin hydroclori",
-                    },
-                    new CreateMedicineModel()
-                    {
-                        Id = 2,
-                        Name = "Allerphast",
-                        Prescription = "Allerphast 180 mg là một sản phẩm của công ty cổ phần dược phẩm và sinh học y tế Mebiphar, thành phần chính chứa fexofenadin hydroclori"
-                    }
-                };
-                return View(newmodel);
-            }
+            var result = await medicineRepository.GetAllMedicine(text);
+            var item = result.Item1;
+            ViewData["Count"] = result.Item2;
+            ViewData["Text"] = text;
             List<CreateMedicineModel> model = new List<CreateMedicineModel>();
             for (int i = 0; i < item.Count(); i++)
             {

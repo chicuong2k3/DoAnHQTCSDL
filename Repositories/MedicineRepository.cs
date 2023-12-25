@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Dapper;
 using DataModels;
+using DataModels.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +17,40 @@ namespace Repositories
     {
         private AppDbContext dbContext;
         private IMapper mapper;
-        public MedicineRepository(AppDbContext dbContext, IMapper mapper)
+        private readonly DapperContext dapperContext;
+
+        public MedicineRepository(AppDbContext dbContext, IMapper mapper, DapperContext dapperContext)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
+            this.dapperContext = dapperContext;
         }
-        public async Task<List<Medicine>> GetAllMedicine()
+        public async Task<(List<Medicine>, int)> GetAllMedicine(string text)
         {
-            return await dbContext.Medicines.ToListAsync();
+            List<Medicine> list = new List<Medicine>();
+            var param = new DynamicParameters();
+            int count = 0;
+            string procedureName = "TimKiemDanhMucThuoc";
+            param.Add("TenThuoc", text);
+			param.Add("count", dbType: DbType.Int32, direction: ParameterDirection.Output);
+			using (var connection = dapperContext.CreateConnection())
+            {
+                try
+                {
+                    var records = await connection
+                        .QueryAsync<Medicine>(procedureName, param, commandType: CommandType.StoredProcedure);
+                    list = records.ToList();
+					count = param.Get<int>("count");
+				}
+                catch (Exception ex)
+                {
+                    await Console.Out.WriteLineAsync("---------=====================----------------");
+                    await Console.Out.WriteLineAsync(ex.Message);
+                    await Console.Out.WriteLineAsync("---------=====================----------------");
+                    return (list, -1);
+                }
+            }
+            return (list, count);
         }
 
         public async Task<Medicine?> GetMedicineById(int id)
@@ -52,11 +81,30 @@ namespace Repositories
             return 0;
         }
 
-        public async Task AddMedicine(Medicine model)
+        public async Task<int> AddMedicine(Medicine model)
         {
-            await dbContext.Medicines.AddAsync(model);
-            await dbContext.SaveChangesAsync();
-        }
+			var param = new DynamicParameters();
+			string procedureName = "ThemDanhMucThuoc";
+			param.Add("TenThuoc", model.Name, DbType.String);
+			param.Add("ChiTietThuoc", model.Prescription, DbType.String);
+			param.Add("GiaTien", model.Price, DbType.Decimal);
+			using (var connection = dapperContext.CreateConnection())
+			{
+				try
+				{
+					await connection
+						.ExecuteAsync(procedureName, param, commandType: CommandType.StoredProcedure);
+				}
+				catch (Exception ex)
+				{
+					await Console.Out.WriteLineAsync("---------=====================----------------");
+					await Console.Out.WriteLineAsync(ex.Message);
+					await Console.Out.WriteLineAsync("---------=====================----------------");
+					return 1;
+				}
+			}
+			return 0;
+		}
 
         public async Task<List<(Medicine, int)>> GetAllQuantityInventory()
         {

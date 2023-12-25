@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
 using DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Repositories;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Odbc;
-using System.Runtime.CompilerServices;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
+
 	public class MedicineInventoryController : Controller
 	{
 		private IMapper mapper;
@@ -25,6 +23,7 @@ namespace WebApplication.Controllers
 			this.medicineInventoryRepository = medicineInventoryRepository;
 			this.medicineRepository = medicineRepository;
 		}
+		
 		public async Task<IActionResult> Index()
 		{
 			var dataRaw = await medicineInventoryRepository.GetAllMedicineInventory();
@@ -38,7 +37,7 @@ namespace WebApplication.Controllers
 
 		public async Task<IActionResult> Create()
 		{
-			var rawData = await medicineRepository.GetAllMedicine();
+			var rawData = (await medicineRepository.GetAllMedicine("")).Item1;
 			var listItem = new List<SelectListItem>();
 			foreach (var item in rawData)
 			{
