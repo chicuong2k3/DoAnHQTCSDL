@@ -63,7 +63,11 @@ namespace WebApplication.Controllers
                 SelectPhoneNumber.Add(new SelectListItem() { Text = item.PhoneNumber, Value = item.PhoneNumber });
             }
             ViewBag.SelectPhoneNumber = SelectPhoneNumber;
-            return View();
+            var model = new MedicalRecordModel()
+            {
+                ExaminationDate = DateTime.Now
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -71,10 +75,11 @@ namespace WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 var item = new MedicalRecord();
                 item.CreatedByDentistId = model.CreatedByDentistId;
                 item.ExamDentistId = model.CreatedByDentistId;
-                item.ExaminationDate = model.ExaminationDate;
+                item.ExaminationDate = new DateOnly(model.ExaminationDate.Year, model.ExaminationDate.Month, model.ExaminationDate.Day);
                 item.Service = model.Service;
                 var targetCus = await customerRepository.GetCustomerByPhoneNumber(model.PhoneNumber.Trim());
                 if(targetCus == null)
@@ -140,8 +145,8 @@ namespace WebApplication.Controllers
             }
         }
 
-        //href="/MedicalRecord/Edit?id=@item.Id&sequence=@item.SequenceNumber&idDentistCreate=@item.CreatedByDentistId&idExamDentist=@item.ExamDentistId"
-        public async Task<IActionResult> Edit(int id, int sequence, string idDentistCreate, string idCustomer, string idExamDentist)
+       
+        public async Task<IActionResult> Edit(int id, int sn)
         {
             ViewBag.service = new List<SelectListItem>()
             {
@@ -149,20 +154,17 @@ namespace WebApplication.Controllers
                 new SelectListItem(){Value = "Nội soi", Text = "Nội soi"},
                 new SelectListItem(){Value = "Siêu âm", Text = "Siêu âm"}
             };
-            ViewBag.id = id;
-            ViewBag.sequence = sequence;
-            ViewBag.idDentistCreate = idDentistCreate;
-            ViewBag.idCustomer = idCustomer;
-            ViewBag.idExamDentist = idExamDentist;
+            var record = await medicalRecordRespository.GetById(id, sn);
+            EditMedicalRecordModel model = mapper.Map<EditMedicalRecordModel>(record);
             //get all dentist
             var allDentist = await dentistRepository.GetAllAsync();
             var dentistCreate = new List<SelectListItem>()
             {
-                new SelectListItem() {Value = idDentistCreate, Text = "Không thay đổi"}
+                new SelectListItem() {Value = model.CreatedByDentistId, Text = "Không thay đổi"}
             };
             var dentistExam = new List<SelectListItem>()
             {
-                new SelectListItem() {Value = idExamDentist, Text = "Không thay đổi"}
+                new SelectListItem() {Value = model.ExamDentistId, Text = "Không thay đổi"}
             };
             foreach (var item in allDentist)
             {
@@ -175,23 +177,23 @@ namespace WebApplication.Controllers
             var customer = await customerRepository.GetAll();
             var selectCustomer = new List<SelectListItem>()
             {
-                new SelectListItem(){Value = idCustomer, Text = "Không thay đổi"}
+                new SelectListItem(){Value = model.CustomerId, Text = "Không thay đổi"}
             };
             foreach (var item in customer)
             {
                 selectCustomer.Add(new SelectListItem() { Value = item.Id, Text = item.FullName});
             }
             ViewBag.customer = selectCustomer;
-			return View();
+			return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditMedicalRecordModel model)
+        public async Task<IActionResult> Edit(EditMedicalRecordModel model, string oldDentistId)
         {
             if(ModelState.IsValid)
             {
                 await medicalRecordRespository.Edit(mapper.Map<MedicalRecord>(model));
-                return Redirect($"/MedicalRecord/Index?dentistId={model.ExamDentistId}");
+                return Redirect($"/MedicalRecord/Index?dentistId={oldDentistId}");
 			}
             return View(model);
         }

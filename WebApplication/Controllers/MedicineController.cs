@@ -50,10 +50,10 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            ViewData["Id"] = id;
-            return View();
+            var medicine = await medicineRepository.GetMedicineById(id);
+            return View(mapper.Map<CreateMedicineModel>(medicine));
         }
 
         [HttpPost]

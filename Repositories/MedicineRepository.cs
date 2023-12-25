@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Repositories
 {
@@ -53,10 +54,29 @@ namespace Repositories
             return (list, count);
         }
 
-        public async Task<Medicine?> GetMedicineById(int id)
+        public async Task<Medicine> GetMedicineById(int id)
         {
-            return await dbContext.Medicines.Where(m => m.Id == id)
-                .Include(m => m.Medicine_MedicalRecords).FirstOrDefaultAsync();
+            Medicine medicine = null;
+            var param = new DynamicParameters();
+            string procedureName = "XemDanhMucThuoc";
+            param.Add("@Medicine_id", id, DbType.Int32);
+            using (var connection = dapperContext.CreateConnection())
+            {
+                try
+                {
+                    var records = await connection
+                        .QueryAsync<Medicine>(procedureName, param, commandType: CommandType.StoredProcedure);
+                    medicine = records.SingleOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    await Console.Out.WriteLineAsync("---------=====================----------------");
+                    await Console.Out.WriteLineAsync(ex.Message);
+                    await Console.Out.WriteLineAsync("---------=====================----------------");
+                    return medicine;
+                }
+            }
+            return medicine;
         }
 
         public async Task UpdateMedicine(Medicine medicine)

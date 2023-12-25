@@ -33,6 +33,13 @@ namespace Repositories
             return result;
         }
 
+        public async Task<MedicalRecord> GetById(int id, int sn)
+        {
+            var result = await dbContext.MedicalRecords.
+                Where(mr => mr.Id == id && mr.SequenceNumber == sn).SingleOrDefaultAsync();
+            return result;
+        }
+
         public async Task<List<MedicalRecord>> GetByIdCustomer(string customerId)
         {
             List<MedicalRecord> result = new List<MedicalRecord>();

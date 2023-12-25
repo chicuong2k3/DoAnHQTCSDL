@@ -2,13 +2,13 @@
 @model IEnumerable<CreateMedicineModel>
 
 @{
-	ViewData["Title"] = "Medicine";
+	ViewData["Title"] = "Thuốc trong kho";
 }
 
 <div class="row">
 	<div class="col-md-4 col-sm-12">
 		<a class="btn btn-success mb-3 text-light" asp-controller="Medicine" asp-action="Create">
-			<span class="mx-1">Add Medicine</span>
+			<span class="mx-1">Thêm thuốc</span>
 		</a>
 	</div>
 	<form class="col-md-8 col-sm-12 row" method="post" asp-action="Index">
@@ -28,8 +28,9 @@
 		<thead>
 			<tr>
 				<th class="table-plus datatable-nosort">ID</th>
-				<th scope="col">Name</th>
-				<th scope="col">Prescription</th>
+				<th scope="col">Tên thuốc</th>
+				<th scope="col">Chỉ định</th>
+				<th scope="col">Giá</th>
 				<th scope="col"></th>
 				<th scope="col"></th>
 			</tr>
@@ -41,7 +42,7 @@
 					<td class="table-plus">@medicine.Id</td>
 					<td>@medicine.Name</td>
 					<td>@medicine.Prescription</td>
-
+					<td>@medicine.Price VNĐ</td>
 					<td>
 						<a class="btn btn-warning text-light" asp-controller="Medicine" asp-action="Edit" asp-route-id="@medicine.Id">
 							<i class="icon-copy fa fa-edit" aria-hidden="true"></i>

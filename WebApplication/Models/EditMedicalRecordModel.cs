@@ -9,7 +9,8 @@ namespace WebApplication.Models
 		public int Id { get; set; }
 		public int SequenceNumber { get; set; }
 		[Display(Name = "Ngày khám")]
-		public DateOnly ExaminationDate { get; set; }
+        [DataType(DataType.Date)]
+		public DateTime ExaminationDate { get; set; }
         [Display(Name = "Dịch vụ")]
         public string Service { get; set; }
 		public decimal ServicePrice { get; set; } = 1200;

@@ -1,35 +1,33 @@
+﻿@using Repositories
 
 
 @model IEnumerable<MedicineInventoryModel>
-
+@inject MedicineRepository MedicineRepository
 @{
-	ViewData["Title"] = "Medicine warehouse";
+	ViewData["Title"] = "Thuốc trong kho";
 }
 
 
 
 <div class="table-responsive">
-	<div class="pd-20">
-		<h4 class="text-blue h4">Data Table with Export Buttons</h4>
-	</div>
 	<a class="btn btn-success mb-3 text-light" asp-controller="MedicineInventory" asp-action="Create">
 		<i class="icon-copy fa fa-plus-square-o" aria-hidden="true"></i>
-		<span class="mx-1">Add Medicine Inventory</span>
+		<span class="mx-1">Thêm thuốc vào kho</span>
 	</a>
 
 	<a class="btn btn-danger mb-3 text-light" asp-controller="MedicineInventory" asp-action="DeleteAllExpirededicine">
 		<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
-		<span class="mx-1">Delete All Expired Medicine</span>
+		<span class="mx-1">Xóa tất cả thuốc hết hạn</span>
 	</a>
 
 	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th class="table-plus datatable-nosort">ID</th>
-				<th>MedicineId</th>
-				<th>ExpiryDate</th>
-				<th>Quantity</th>
-				<th>Unit</th>
+				<th>Tên thuốc</th>
+				<th>Ngày hết hạn</th>
+				<th>Số lượng trong kho</th>
+				<th>Đơn vị</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -38,7 +36,12 @@
 			{
 				<tr id="row-@item.Id">
 					<td class="table-plus">@item.Id</td>
-					<td>@item.MedicineId</td>
+					<td>
+						@{
+							var medicine = await MedicineRepository.GetMedicineById(@item.MedicineId);
+						}
+						@medicine.Name
+					</td>
 					<td>@item.ExpiryDate</td>
 					<td>@item.InventoryQuantity</td>
 					<td>@item.Unit</td>
