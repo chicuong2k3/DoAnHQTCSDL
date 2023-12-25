@@ -22,12 +22,20 @@ namespace Repositories
         
         public async Task<List<MedicalRecord>> GetByIdDentist(string IdDentist)
         {
-            return await dbContext.MedicalRecords.Where(mr => mr.ExamDentistId == IdDentist).ToListAsync();
+            var result = new List<MedicalRecord>();
+            result = await dbContext.MedicalRecords.
+                Where(mr => mr.ExamDentistId == IdDentist).ToListAsync();
+            return result;
         }
 
         public async Task<List<MedicalRecord>> GetByIdCustomer(string customerId)
         {
-            return await dbContext.MedicalRecords.Where(mr => mr.CustomerId == customerId)
+            var result = new List<MedicalRecord>();
+            if(!dbContext.MedicalRecords.Any())
+            {
+                return result;
+            }
+            else return await dbContext.MedicalRecords.Where(mr => mr.CustomerId == customerId)
                 .OrderByDescending(c => c.ExaminationDate)
                 .ToListAsync();
         }
@@ -65,6 +73,10 @@ namespace Repositories
 
         public async Task<MedicalRecord?> GetLatestMedicalRecordByCustomerId(string customerId)
         {
+            if(await dbContext.MedicalRecords.CountAsync() == 0)
+            {
+                return null;
+            }
             var target = await dbContext.MedicalRecords.Where(mr => mr.CustomerId == customerId)
                 .OrderByDescending(mr => mr.SequenceNumber).FirstOrDefaultAsync();
             return target;

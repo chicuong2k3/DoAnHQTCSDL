@@ -1,4 +1,5 @@
-﻿@model MedicineInventoryModel
+﻿@using DataModels
+@model MedicineInventory
 
 @{
     ViewData["Title"] = "Create New Medicine Invectory";
@@ -13,19 +14,17 @@
                 <form method="post">
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="Id"></label>
-                        <input class="form-control" asp-for="Id" value = "@ViewBag.id">
+                        <input class="form-control" asp-for="Id" value = "@Model.Id">
                         <span class="form-control-feedback text-danger" asp-validation-for="Id"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="MedicineId"></label>
-                        <select asp-for="MedicineId" asp-items="@ViewBag.ListMidicine">
-                            <option>Please select one</option>
-                        </select>
+                        <input class="form-control" asp-for="MedicineId" value ="@Model.MedicineId"/>
                         <span class="form-control-feedback text-danger" asp-validation-for="MedicineId"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="ExpiryDate"></label>
-                        <input class="form-control" type="date" asp-for="ExpiryDate">
+                        <input class="form-control" asp-for="ExpiryDate" value ="@Model.ExpiryDate">
                         <span class="form-control-feedback text-danger" asp-validation-for="ExpiryDate"></span>
                     </div>
                     <div class="form-group mb-3">

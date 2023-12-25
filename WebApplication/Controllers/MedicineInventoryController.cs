@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Repositories;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Odbc;
 using System.Runtime.CompilerServices;
 using WebApplication.Models;
 
@@ -71,15 +72,9 @@ namespace WebApplication.Controllers
 
 		public async Task<IActionResult> Edit(int id)
 		{
-			var rawData = await medicineRepository.GetAllMedicine();
-			var listItem = new List<SelectListItem>();
-			foreach (var item in rawData)
-			{
-				listItem.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
-			}
-			ViewBag.ListMidicine = listItem;
-			ViewBag.id = id;
-			return View();
+			var targerMedicineInventory = await medicineInventoryRepository.GetByKey(id);
+			
+			return View(targerMedicineInventory);
 		}
 
 		[HttpPost]
@@ -87,11 +82,17 @@ namespace WebApplication.Controllers
 		{
 			if(ModelState.IsValid)
 			{
-				await medicineInventoryRepository.Update(mapper.Map<MedicineInventory>(model));
-				return RedirectToAction("Index");
+				var result = await medicineInventoryRepository.Update(mapper.Map<MedicineInventory>(model));
+
+				return Redirect("/MedicineInventory/Index");
 			}
 			return View(model);
 		}
 
+		public async Task<IActionResult> DeleteAllExpirededicine()
+		{
+			var result = await medicineInventoryRepository.DeleteAllExpirededicine();
+			return Redirect("/MedicineInventory/Index");
+		}
 	}
 }
