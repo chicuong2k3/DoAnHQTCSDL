@@ -18,7 +18,6 @@
 				<th scope="col">Số điện thoại</th>
 				<th scope="col">Chức vụ</th>
 				<th scope="col"></th>
-				<th scope="col"></th>
 				<th scope="col">Tình trạng tài khoản (Khóa)</th>
 			</tr>
 		</thead>
@@ -38,17 +37,26 @@
 						{
 							<text>Nhân viên</text>
 						}
+						else if (user.Role == "Customer")
+						{
+							<text>Khách hàng</text>
+						}
 					</td>
 					
 					<td>
 						<a class="btn btn-warning text-light" asp-controller="Administration" asp-action="EditUser" asp-route-id="@user.Id">
 						<i class="icon-copy fa fa-edit" aria-hidden="true"></i>
 						</a>
-					</td>
-					<td>
 						<button data-id="@user.Id" type="button" class="btn btn-danger text-light delete-confirm-btn">
 							<i class="icon-copy fa fa-trash-o" aria-hidden="true"></i>
 						</button>
+						@if (user.Role == "Customer")
+						{
+							<a class="btn btn-info text-light" asp-controller="Administration" asp-action="ViewCustomerDetail" asp-route-customerName="@user.FullName">
+								<i class="icon-copy fa fa-vcard-o" aria-hidden="true"></i>
+							</a>
+						}
+						
 					</td>
 					@{
 						string checkAttr = "";
@@ -154,7 +162,6 @@
 			$('.lock-btn').on('change', function () {
 				let id = $(this).attr('data-id');
 				let active = this.checked;
-				console.log(active);
 				$.ajax({
 					url: '@Url.Action("LockOrUnlockUser", "Administration")',
 					type: 'POST',

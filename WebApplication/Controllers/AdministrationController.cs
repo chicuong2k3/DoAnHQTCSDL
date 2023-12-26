@@ -1,32 +1,39 @@
-﻿using DataModels;
+﻿using AutoMapper;
+using DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
-using System.Data;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-	//[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin")]
 	public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
 		private readonly UserManager<AppUser> userManager;
         private readonly DentistRepository dentistRepository;
         private readonly EmployeeRepository employeeRepository;
+        private readonly CustomerRepository customerRepository;
+        private readonly IMapper mapper;
 
         public AdministrationController(
             RoleManager<IdentityRole> roleManager,
             UserManager<AppUser> userManager,
             DentistRepository dentistRepository,
-            EmployeeRepository employeeRepository)
+            EmployeeRepository employeeRepository,
+            CustomerRepository customerRepository,
+            IMapper mapper)
         {
             this.roleManager = roleManager;
 			this.userManager = userManager;
             this.dentistRepository = dentistRepository;
             this.employeeRepository = employeeRepository;
+            this.customerRepository = customerRepository;
+            this.mapper = mapper;
         }
 
         #region Features concerning user
@@ -61,6 +68,20 @@ namespace WebApplication.Controllers
 						model.Role = "Employee";
 					}
                     userList.Add(model);
+				}
+                else if (await userManager.IsInRoleAsync(user, "Customer"))
+                {
+                    ListUsersModel model = new ListUsersModel()
+                    {
+                        Id = user.Id,
+                        UserName = user.UserName,
+                        IsLocked = user.IsLocked
+                    };
+                    var customer = await customerRepository.GetCustomerByAccountAsync(user);
+                    model.FullName = customer.FullName;
+                    model.PhoneNumber = customer.PhoneNumber;
+                    model.Role = "Customer";
+					userList.Add(model);
 				}
             }
             return View(userList);
@@ -267,6 +288,31 @@ namespace WebApplication.Controllers
             return Ok();
         }
 
+        public async Task<IActionResult> ViewCustomerDetail(string customerName)
+        {
+            var res = await customerRepository.GetCustomerByNameAsync(customerName);
+
+            var customer = res.Item1;
+            var timthay = res.Item2;
+			if (timthay == 1)
+			{
+				ViewBag.Notification = "Tìm thấy khách hàng";
+			}
+			if (customer == null)
+            {
+                return View(
+                new CustomerModel()
+                {
+                    FullName = "",
+                    PhoneNumber = "",
+                    DayOfBirth = new DateTime(0),
+                    Address = ""
+                });
+            }
+            
+            var model = mapper.Map<CustomerModel>(customer);
+            return View(model);
+        }
 		#endregion
 	}
 }
