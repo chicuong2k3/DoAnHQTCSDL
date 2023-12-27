@@ -3,6 +3,7 @@ using DataModels;
 using DataModels.Config;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Repositories
 {
@@ -26,12 +27,35 @@ namespace Repositories
             return final;
         }
         
-        public async Task<List<MedicalRecord>> GetByIdDentist(string IdDentist)
+        public async Task<(List<MedicalRecord>, int)> GetByIdDentist(string IdDentist, string text)
         {
-            var result = await dbContext.MedicalRecords.
-                Where(mr => mr.ExamDentistId == IdDentist).ToListAsync();
-            return result;
-        }
+			List<MedicalRecord> list = new List<MedicalRecord>();
+			var param = new DynamicParameters();
+			int count = 0;
+			string procedureName = "TimKiemHSBA";
+			param.Add("dentistId", IdDentist);
+			param.Add("phoneNumber", text);
+			param.Add("soLuongTimThay", dbType: DbType.Int32, direction: ParameterDirection.Output);
+			SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
+			using (var connection = dapperContext.CreateConnection())
+			{
+				try
+				{
+					var records = await connection
+						.QueryAsync<MedicalRecord>(procedureName, param, commandType: CommandType.StoredProcedure);
+					list = records.ToList();
+					count = param.Get<int>("soLuongTimThay");
+				}
+				catch (Exception ex)
+				{
+					await Console.Out.WriteLineAsync("---------=====================----------------");
+					await Console.Out.WriteLineAsync(ex.Message);
+					await Console.Out.WriteLineAsync("---------=====================----------------");
+					return (list, -1);
+				}
+			}
+			return (list, count);
+		}
 
         public async Task<MedicalRecord> GetById(int id, int sn)
         {
@@ -65,11 +89,37 @@ namespace Repositories
             }
             return result;
         }
-        public async Task Add(MedicalRecord model)
+        public async Task<int> Add(MedicalRecord model)
         {
-            await dbContext.MedicalRecords.AddAsync(model);
-            await dbContext.SaveChangesAsync();
-        }
+			var param = new DynamicParameters();
+			string procedureName = "ThemHSBA";
+			param.Add("id", model.Id, DbType.Int32);
+			param.Add("lanKham", model.SequenceNumber, DbType.Int32);
+			param.Add("ngayKham", model.ExaminationDate, DbType.Date);
+			param.Add("dichVu", model.Service, DbType.String);
+			param.Add("gia", model.ServicePrice, DbType.Decimal);
+			param.Add("status", model.Status, DbType.String);
+			param.Add("customerId", model.CustomerId, DbType.String);
+			param.Add("idNhaSiTao", model.CreatedByDentistId, DbType.String);
+			param.Add("idNhaSiKham", model.ExamDentistId, DbType.String);
+			SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
+			using (var connection = dapperContext.CreateConnection())
+			{
+				try
+				{
+					await connection
+						.ExecuteAsync(procedureName, param, commandType: CommandType.StoredProcedure);
+				}
+				catch (Exception ex)
+				{
+					await Console.Out.WriteLineAsync("---------=====================----------------");
+					await Console.Out.WriteLineAsync(ex.Message);
+					await Console.Out.WriteLineAsync("---------=====================----------------");
+					return 1;
+				}
+			}
+			return 0;
+		}
 
         public async Task<int> Delete(int id, int sequence)
         {

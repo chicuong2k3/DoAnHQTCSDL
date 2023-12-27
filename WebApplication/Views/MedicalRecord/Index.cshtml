@@ -9,13 +9,35 @@
 	var AccountDentist = await UserManager.GetUserAsync(User);
 }
 
+
+	<div class="row">
+		@if (await UserManager.IsInRoleAsync(AccountDentist, "Dentist"))
+		{
+			<div class="col-md-4 col-sm-12">
+				<a class="btn btn-success text-light mb-3" asp-controller="MedicalRecord"
+				   asp-action="AddMedicalRecord" asp-route-id="@ViewBag.id">
+					Thêm hồ sơ bệnh án
+				</a>
+			</div>
+		}
+		@if (await UserManager.IsInRoleAsync(AccountDentist, "Employee"))
+		{
+			<form class="col-md-8 col-sm-12 row" method="post" asp-action="Index">
+				<div class="form-group col-8">
+					<input value="@ViewData["Text"]" name="text" type="text" class="form-control" placeholder="Tìm hồ sơ theo số điện thoại">
+				</div>
+				<button type="submit" class="btn btn-danger mb-4 text-light col-4">Tìm kiếm</button>
+			</form>
+		}
+		
+	</div>
+
+	
 @if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
 {
-	<a class="btn btn-warning text-light mb-3" asp-controller="MedicalRecord"
-	   asp-action="AddMedicalRecord" asp-route-id="@ViewBag.id">
-		<i class="icon-copy fa fa-edit" aria-hidden="true">Thêm hồ sơ bệnh án</i>
-	</a>
-
+	<div class="row">
+		<div class="alert alert-primary mx-3">Số lượng hồ sơ: @ViewData["Count"]</div>
+	</div>
 }
 
 

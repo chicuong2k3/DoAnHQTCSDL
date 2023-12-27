@@ -126,26 +126,6 @@
 				modal.modal('hide');
 			}
 
-			$('.lock-btn').on('change', function () {
-				let id = $(this).attr('data-id');
-				let active = this.checked;
-				console.log(active);
-				$.ajax({
-					url: '@Url.Action("LockOrUnlockUser", "Administration")',
-					type: 'POST',
-					contentType: 'application/x-www-form-urlencoded',
-					data: { id: id, active: active },
-					success: function (data) {
-
-					},
-					error: function (error) {
-						console.log(error)
-						toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
-					}
-				});
-			});
-
-
 		});
 	</script>
 }

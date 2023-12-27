@@ -30,14 +30,17 @@ namespace WebApplication.Controllers
 			this.dentistRepository = dentistRepository;
 		}
 
-		public async Task<IActionResult> Index(string dentistId)
+		public async Task<IActionResult> Index(string dentistId = "", string text = "")
         {
             ViewBag.id = dentistId;
             await Console.Out.WriteLineAsync("======================================");
             await Console.Out.WriteLineAsync($"dentist id => {dentistId}");
             await Console.Out.WriteLineAsync("======================================");
-			var model = await medicalRecordRespository.GetByIdDentist(dentistId);
-            return View(model);
+			var result = await medicalRecordRespository.GetByIdDentist(dentistId, text);
+			var items = result.Item1;
+			ViewData["Count"] = result.Item2;
+			ViewData["Text"] = text;
+			return View(items);
         }
 
         public async Task<IActionResult> MedicalRecordOfCustomer(string customerId)

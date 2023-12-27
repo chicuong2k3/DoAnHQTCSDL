@@ -101,6 +101,9 @@
                     }
                     else if(User.IsInRole("Employee"))
                     {
+                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="Index" class="btn btn-info" style="height: 40px">
+                            Hồ sơ bệnh nhân
+                        </a>
                         <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="Index" class="dropdown-toggle no-arrow">
                             Thanh Toán
                         </a>
