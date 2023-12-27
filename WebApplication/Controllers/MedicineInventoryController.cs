@@ -8,7 +8,7 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-
+	[Authorize(Roles = "Admin")]
 	public class MedicineInventoryController : Controller
 	{
 		private IMapper mapper;
@@ -92,6 +92,19 @@ namespace WebApplication.Controllers
 		{
 			var result = await medicineInventoryRepository.DeleteAllExpirededicine();
 			return Redirect("/MedicineInventory/Index");
+		}
+		[HttpPost]
+		public async Task<IActionResult> IncreaseMedicine(int id)
+		{
+			var quantity = await medicineInventoryRepository.IncreaseMedicine(id);
+			return Ok(quantity);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> DecreaseMedicine(int id)
+		{
+			var quantity = await medicineInventoryRepository.DecreaseMedicine(id);
+			return Ok(quantity);
 		}
 	}
 }

@@ -2,14 +2,7 @@
 using DataModels;
 using DataModels.Config;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
@@ -123,6 +116,56 @@ namespace Repositories
 				}
 			}
 			return check;
+		}
+
+		public async Task<int> IncreaseMedicine(int id)
+		{
+			string procName = "sp_Them1Thuoc";
+			var param = new DynamicParameters();
+			param.Add("Id", id, DbType.Int32);
+			using (var connection = dapperContext.CreateConnection())
+			{
+				try
+				{
+					await connection.ExecuteAsync(procName, param,
+						commandType: CommandType.StoredProcedure);
+				}
+				catch (Exception ex)
+				{
+					await Console.Out.WriteLineAsync("---------------------================-----------------");
+					await Console.Out.WriteLineAsync(ex.Message);
+					await Console.Out.WriteLineAsync("---------------------================-----------------");
+					
+				}
+			}
+			var res = await dbContext.MedicineInventories.
+				Where(x => x.Id == id).SingleOrDefaultAsync();
+			return res.InventoryQuantity;
+		}
+
+		public async Task<int> DecreaseMedicine(int id)
+		{
+			string procName = "sp_Giam1Thuoc";
+			var param = new DynamicParameters();
+			param.Add("Id", id, DbType.Int32);
+			using (var connection = dapperContext.CreateConnection())
+			{
+				try
+				{
+					await connection.ExecuteAsync(procName, param,
+						commandType: CommandType.StoredProcedure);
+				}
+				catch (Exception ex)
+				{
+					await Console.Out.WriteLineAsync("---------------------================-----------------");
+					await Console.Out.WriteLineAsync(ex.Message);
+					await Console.Out.WriteLineAsync("---------------------================-----------------");
+
+				}
+			}
+			var res = await dbContext.MedicineInventories.
+				Where(x => x.Id == id).SingleOrDefaultAsync();
+			return res.InventoryQuantity;
 		}
 	}
 }
