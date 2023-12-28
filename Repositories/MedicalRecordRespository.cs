@@ -2,6 +2,7 @@
 using DataModels;
 using DataModels.Config;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Data;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -57,7 +58,7 @@ namespace Repositories
 			return (list, count);
 		}
 
-        public async Task<MedicalRecord> GetById(int id, int sn)
+        public async Task<MedicalRecord?> GetById(int id, int sn)
         {
             var result = await dbContext.MedicalRecords.
                 Where(mr => mr.Id == id && mr.SequenceNumber == sn).SingleOrDefaultAsync();
@@ -182,6 +183,44 @@ namespace Repositories
         {
             var target = await dbContext.MedicalRecords.OrderBy(m => m.Id).FirstOrDefaultAsync();
             return target;
+        }
+
+        public async Task<int> UpdateService(int id, int sequence, decimal deltaPrice)
+        {
+            var param = new DynamicParameters();
+            param.Add("Id", id);
+            param.Add("Sequence", sequence);
+            param.Add("price", Math.Abs(deltaPrice));
+
+            int result = 1;
+            try
+            {
+                string nameProc = "";
+                if(deltaPrice > 0)
+                {
+                    nameProc = "sp_IncreaseServicePrice";
+                }
+                else if(deltaPrice < 0)
+                {
+                    nameProc = "sp_DecreaseServicePrice";
+                }
+                else
+                {
+                    return result;
+                }
+                using(var connection = dapperContext.CreateConnection())
+                {
+                    await connection.ExecuteAsync(nameProc, param, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch(Exception ex)
+            {
+                await Console.Out.WriteLineAsync("================<>=========================");
+                await Console.Out.WriteLineAsync(ex.Message);
+                await Console.Out.WriteLineAsync("================<>=========================");
+                result = 0; //fail
+            }
+            return result;
         }
     }
 }
