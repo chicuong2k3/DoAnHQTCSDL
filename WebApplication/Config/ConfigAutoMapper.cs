@@ -11,7 +11,7 @@ namespace WebApplication.Congfig
             CreateMap<DateTime, DateOnly>().ConvertUsing<DateTimeToDateOnlyConverter>();
             CreateMap<DateOnly, DateTime>().ConvertUsing<DateOnlyToDateTimeConverter>();
             CreateMap<Medicine, CreateMedicineModel>().ReverseMap();
-            CreateMap<MedicineInventory, MedicineInventoryModel>().ReverseMap();
+            CreateMap<MedicineInventory, WebApplication.Models.MedicineInventoryModel>().ReverseMap();
             CreateMap<MedicalRecord, EditMedicalRecordModel>().ReverseMap();
             CreateMap<MedicineMedicalRecordModel, Medicine_MedicalRecord>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();

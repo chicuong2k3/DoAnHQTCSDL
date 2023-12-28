@@ -17,9 +17,18 @@ namespace Repositories
 			this.dapperContext = dapperContext;
 		}
 
-		public async Task<List<MedicineInventory>> GetAllMedicineInventory()
+		public async Task<List<MedicineInventoryModel>> GetAllMedicineInventory()
 		{
-			var data = await dbContext.MedicineInventories.ToListAsync();
+			var data = await dbContext.MedicineInventories.
+				Select(mr => new MedicineInventoryModel
+				{
+					Id = mr.Id,
+					MedicineId = mr.MedicineId,
+					NameMedicine = dbContext.Medicines.Where(med => med.Id == mr.Medicine.Id).First().Name,
+					ExpiryDate = mr.ExpiryDate,
+					InventoryQuantity = mr.InventoryQuantity,
+					Unit = mr.Unit
+				}).ToListAsync();
 			return data;
 		}
 

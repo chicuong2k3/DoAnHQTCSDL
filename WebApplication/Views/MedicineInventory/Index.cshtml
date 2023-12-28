@@ -1,7 +1,7 @@
 ﻿@using Repositories
+@using DataModels
 
-
-@model IEnumerable<MedicineInventoryModel>
+@model IEnumerable<DataModels.MedicineInventoryModel>
 @inject MedicineRepository MedicineRepository
 @{
 	ViewData["Title"] = "Thuốc trong kho";
@@ -37,10 +37,7 @@
 				<tr id="row-@item.Id">
 					<td class="table-plus">@item.Id</td>
 					<td>
-						@{
-							var medicine = await MedicineRepository.GetMedicineById(@item.MedicineId);
-						}
-						@medicine.Name
+						 @item.NameMedicine
 					</td>
 					<td>@item.ExpiryDate</td>
 					<td>

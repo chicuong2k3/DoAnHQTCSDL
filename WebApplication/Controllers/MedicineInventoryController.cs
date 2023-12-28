@@ -27,12 +27,7 @@ namespace WebApplication.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var dataRaw = await medicineInventoryRepository.GetAllMedicineInventory();
-			List<MedicineInventoryModel> model = new List<MedicineInventoryModel>();
-			foreach (var item in dataRaw)
-			{
-				model.Add(mapper.Map<MedicineInventoryModel>(item));
-			}
-			return View(model);
+			return View(dataRaw);
 		}
 
 		public async Task<IActionResult> Create()
@@ -47,7 +42,7 @@ namespace WebApplication.Controllers
 			return View();
 		}
 		[HttpPost]
-		public async Task<IActionResult> Create(MedicineInventoryModel model)
+		public async Task<IActionResult> Create(WebApplication.Models.MedicineInventoryModel model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -77,7 +72,7 @@ namespace WebApplication.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Edit(MedicineInventoryModel model)
+		public async Task<IActionResult> Edit(WebApplication.Models.MedicineInventoryModel model)
 		{
 			if(ModelState.IsValid)
 			{
