@@ -3,18 +3,11 @@ using Dapper;
 using DataModels;
 using DataModels.Config;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Repositories
 {
-    public class MedicineRepository
+	public class MedicineRepository
     {
         private AppDbContext dbContext;
         private IMapper mapper;

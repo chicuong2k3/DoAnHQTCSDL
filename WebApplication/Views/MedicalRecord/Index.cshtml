@@ -33,12 +33,11 @@
 	</div>
 
 	
-@if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
-{
+
 	<div class="row">
 		<div class="alert alert-primary mx-3">Số lượng hồ sơ: @ViewData["Count"]</div>
 	</div>
-}
+
 
 
 <div class="table-responsive">
@@ -164,7 +163,6 @@
 							toastr.success(data, 'Notification', { timeOut: 2000 });
 						},
 						error: function (error) {
-							console.log(error)
 							toastr.error(error.responseText, 'Notification', { timeOut: 2000 });
 						}
 					});

@@ -129,7 +129,7 @@ namespace Repositories
 
 		public async Task<int> IncreaseMedicine(int id)
 		{
-			string procName = "sp_Them1Thuoc";
+			string procName = "Them1Thuoc";
 			var param = new DynamicParameters();
 			param.Add("Id", id, DbType.Int32);
 			using (var connection = dapperContext.CreateConnection())
@@ -154,7 +154,7 @@ namespace Repositories
 
 		public async Task<int> DecreaseMedicine(int id)
 		{
-			string procName = "sp_Giam1Thuoc";
+			string procName = "Giam1Thuoc";
 			var param = new DynamicParameters();
 			param.Add("Id", id, DbType.Int32);
 			using (var connection = dapperContext.CreateConnection())

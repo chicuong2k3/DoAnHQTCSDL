@@ -96,8 +96,12 @@ namespace WebApplication.Controllers
 
 		public async Task<IActionResult> MedicalRecordOfCustomer(string customerId)
         {
-            var model = await medicalRecordRespository.GetByIdCustomer(customerId);
-            return View("Index", model);
+            
+            var result = await medicalRecordRespository.GetByIdCustomer(customerId);
+            var model = result.Item1;
+			@ViewData["Count"] = result.Item2;
+
+			return View("Index", model);
         }
 
         public async Task<IActionResult> AddMedicalRecord(string id)
@@ -191,11 +195,11 @@ namespace WebApplication.Controllers
             var result = await medicalRecordRespository.Delete(id, sequence);
             if(result == 0)
             {
-                return BadRequest();
+                return BadRequest("Xóa hồ sơ thất bại");
             }
             else
             {
-                return Ok();
+                return Ok("Xóa hồ sơ thành công");
             }
         }
 
