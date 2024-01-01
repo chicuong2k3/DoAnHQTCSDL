@@ -139,7 +139,15 @@ namespace DataModels
 				UserId = adminId2
 			});
 
-			Randomizer.Seed = new Random(8675390);
+            builder.Entity<Credit>().Property(c => c.CustomerId)
+                .IsRequired(false);
+
+            builder.Entity<Credit>()
+                .HasData(new Credit()
+                {
+                    Id = 1,
+                    Balance = 0
+                });
 
         }
 
@@ -153,5 +161,6 @@ namespace DataModels
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<MedicineInventory> MedicineInventories { get; set; }
         public DbSet<Medicine_MedicalRecord> Medicine_MedicalRecords { get; set; }
+        public DbSet<Credit> credits { set; get; }
     }
 }

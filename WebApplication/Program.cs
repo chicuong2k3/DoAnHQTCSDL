@@ -49,6 +49,7 @@ namespace WebApplication
 			builder.Services.AddScoped<MedicineInventoryRepository>();
 			builder.Services.AddScoped<MedicalRecordRespository>();
 			builder.Services.AddScoped<MedicineMedicalRecordRespository>();
+			builder.Services.AddScoped<CreditRepository>();
 			// Auto Mapper Configurations
 			var mapperConfig = new MapperConfiguration(mc =>
 			{

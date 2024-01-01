@@ -57,7 +57,7 @@
             $("#submit").click(async() => {
                 let customerId = $("#phonenumber").val();
                 console.log("customer id => ", customerId)
-                location.href = `/Payment/Bill?customerId=${customerId}`;
+                location.href = `/Payment/Bill?customerId=${customerId}&statuspayment=no`;
             })
         })
     </script>

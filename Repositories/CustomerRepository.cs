@@ -28,6 +28,12 @@ namespace Repositories
         public async Task AddCustomerAsync(Customer customer)
         {
             await dbContext.Customers.AddAsync(customer);
+            var credit = new Credit()
+            {
+                Balance = 1000000,
+                CustomerId = customer.Id,
+            };
+            await dbContext.credits.AddAsync(credit);
             await dbContext.SaveChangesAsync();
         }
 

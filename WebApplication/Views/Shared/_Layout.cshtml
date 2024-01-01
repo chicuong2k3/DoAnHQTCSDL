@@ -86,6 +86,9 @@
                         <a class="btn btn-secondary d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="MedicalRecordOfCustomer" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
                             Hồ sơ bệnh án
                         </a>
+                        <a class="btn btn-secondary d-flex align-items-center mx-3" asp-controller="CustomerCredit" asp-action="Index" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
+                            Nạp tiền
+                        </a>
                     }
                     else if (User.IsInRole("Dentist"))
                     {

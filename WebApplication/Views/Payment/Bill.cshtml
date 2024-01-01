@@ -30,6 +30,19 @@
 		</tbody>
 	</table>
 	<h5><b>Total : </b>@Model.Total</h5>
+	@if(Model.Status == "yes")
+	{
+		<h5><b>Đã thanh toán</b></h5>
+		<a class="btn btn-warning" asp-action="Index" asp-controller="Payment">Back</a>
+	}
+	else
+	{
+		@if(Model.statuspayment == "yes")
+		{
+			<h5><b>Tài khoản quý khách không đủ</b></h5>	
+		}
+		<a href ="/Payment/Transfer?customerid=@Model.CustomerId&total=@Model.Total&id=@Model.IdMedicalRecord&sequence=@Model.Sequence" class ="btn btn-success">Thanh toán</a>
+	}
 </div>
 
 @section Styles {

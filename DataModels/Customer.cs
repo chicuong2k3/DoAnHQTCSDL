@@ -15,5 +15,6 @@ namespace DataModels
         public AppUser Account { get; set; }
         [ForeignKey(nameof(Account))]
         public string AccountId { get; set; }
+        public Credit credit { set; get; }
     }
 }
