@@ -70,7 +70,7 @@ namespace Repositories
             int count = 0;
             List<MedicalRecord> result = new List<MedicalRecord>();
             var param = new DynamicParameters();
-            string procedureName = "CUSTOMER_SEE_RECORD_UR";
+            string procedureName = "CUSTOMER_SEE_RECORD";
             param.Add("idCustomer", customerId);
             param.Add("soHS", DbType.Int32, direction: ParameterDirection.Output);
             SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
@@ -138,7 +138,7 @@ namespace Repositories
 			//return 0;
 			List<MedicalRecord> result = new List<MedicalRecord>();
 			var param = new DynamicParameters();
-			string procedureName = "DELETE_RECORD_UR";
+			string procedureName = "DELETE_RECORD";
 			param.Add("idHS", id);
 			param.Add("lankham", sequence);
 			SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
