@@ -11,6 +11,7 @@ namespace WebApplication.Controllers
         }
         public IActionResult Index()
         {
+            var notifi = TempData["Err"];
             return View();
         }
 

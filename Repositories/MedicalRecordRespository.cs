@@ -163,17 +163,17 @@ namespace Repositories
 
         public async Task<int> Edit(MedicalRecord model)
         {
+            int kq = 0;
             var param = new DynamicParameters();
             string procedureName = "UPDATE_PATIENT_RECORD";
             param.Add("idHS", model.Id, DbType.Int32);
             param.Add("lankham", model.SequenceNumber, DbType.Int32);
             param.Add("date_time", model.ExaminationDate, DbType.Date);
             param.Add("dichvu", model.Service, DbType.String);
-            param.Add("giadichvu", model.ServicePrice, DbType.Decimal);
-            param.Add("tinhtrang", model.Status, DbType.String);
             param.Add("idCustomer", model.CustomerId, DbType.String);
             param.Add("idBsTao", model.CreatedByDentistId, DbType.String);
             param.Add("idBsKT", model.ExamDentistId, DbType.String);
+            param.Add("kq", dbType: DbType.Int32, direction: ParameterDirection.Output);
             SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
             using (var connection = dapperContext.CreateConnection())
             {
@@ -181,16 +181,18 @@ namespace Repositories
                 {
                     await connection
                         .ExecuteAsync(procedureName, param, commandType: CommandType.StoredProcedure);
+                    kq = param.Get<int>("kq");
                 }
+
                 catch (Exception ex)
                 {
                     await Console.Out.WriteLineAsync("---------=====================----------------");
                     await Console.Out.WriteLineAsync(ex.Message);
                     await Console.Out.WriteLineAsync("---------=====================----------------");
-                    return 1;
+                    return kq;
                 }
             }
-            return 0;
+            return kq;
             
         }
 

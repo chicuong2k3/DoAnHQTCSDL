@@ -98,10 +98,16 @@ namespace WebApplication.Controllers
 				appointment.StartTime = sTime;
 				appointment.EndTime = eTime;
 
-                await appointmentScheduleRepository.AddAppoinment(appointment);
+                var res = await appointmentScheduleRepository.AddAppoinment(appointment);
+				if (res == 0)
+				{
+					TempData["Err"] = "Có lỗi xảy ra. Thêm lịch hẹn thất bại";
+					
+				}
 				return RedirectToAction("Index", "Home");
 			}
-			return View("ReviewAppointment", model);
+            
+            return View("ReviewAppointment", model);
 		}
         [Authorize(Roles = "Customer")]
         [HttpGet]
@@ -121,7 +127,7 @@ namespace WebApplication.Controllers
 			{
 				ViewData["ScheduleDate"] = date;
                 var scheduleList = await appointmentScheduleRepository
-                .GetAllSchedulesBelongToADentist(dentistId);
+                .GetAppointmentsOfDentist(dentistId);
 				var list = scheduleList
 					.Where(x =>
 					x.StartTime.Year == date.Year

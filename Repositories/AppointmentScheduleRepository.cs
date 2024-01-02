@@ -50,19 +50,16 @@ namespace Repositories
 				.ToListAsync();
         }
 
-        public async Task AddAppoinment(AppointmentSchedule appointment)
+        public async Task<int> AddAppoinment(AppointmentSchedule appointment)
         {
+			int res = 0;
 			var param = new DynamicParameters();
 			string procedureName = "Them_Lich_Hen";
-			param.Add("idHS", model.Id, DbType.Int32);
-			param.Add("lankham", model.SequenceNumber, DbType.Int32);
-			param.Add("date_time", model.ExaminationDate, DbType.Date);
-			param.Add("dichvu", model.Service, DbType.String);
-			param.Add("giadichvu", model.ServicePrice, DbType.Decimal);
-			param.Add("tinhtrang", model.Status, DbType.String);
-			param.Add("idCustomer", model.CustomerId, DbType.String);
-			param.Add("idBsTao", model.CreatedByDentistId, DbType.String);
-			param.Add("idBsKT", model.ExamDentistId, DbType.String);
+			param.Add("IdBS", appointment.DentistId, DbType.String);
+			param.Add("IdBN", appointment.CustomerId, DbType.String);
+			param.Add("batdau", appointment.StartTime, DbType.DateTime);
+			param.Add("ketthuc", appointment.EndTime, DbType.DateTime);
+			param.Add("ketqua", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
 			using (var connection = dapperContext.CreateConnection())
 			{
@@ -70,23 +67,18 @@ namespace Repositories
 				{
 					await connection
 						.ExecuteAsync(procedureName, param, commandType: CommandType.StoredProcedure);
+					res = param.Get<int>("ketqua");
 				}
 				catch (Exception ex)
 				{
 					await Console.Out.WriteLineAsync("---------=====================----------------");
 					await Console.Out.WriteLineAsync(ex.Message);
 					await Console.Out.WriteLineAsync("---------=====================----------------");
-					return 1;
+					return 0;
 				}
 			}
-			return 0;
+			return res;
 
-		}
-
-		public async Task<List<AppointmentSchedule>> GetAllSchedulesBelongToADentist(string dentistId)
-		{
-			return await dbContext.AppointmentSchedules
-				.Where(x => x.DentistId == dentistId).ToListAsync();
 		}
 
 		public async Task<AppointmentSchedule> FindAsync(string dentistId, DateTime startTime)

@@ -250,7 +250,11 @@ namespace WebApplication.Controllers
         {
             if(ModelState.IsValid)
             {
-                await medicalRecordRespository.Edit(mapper.Map<MedicalRecord>(model));
+                var res = await medicalRecordRespository.Edit(mapper.Map<MedicalRecord>(model));
+                if (res == 0)
+                {
+                    TempData["Err"] = "Có lỗi xảy ra! Cập nhật hồ sơ thất bại";
+                }
                 return Redirect($"/MedicalRecord/Index?dentistId={oldDentistId}");
 			}
             return View(model);
