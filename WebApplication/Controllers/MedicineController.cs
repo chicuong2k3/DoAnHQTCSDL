@@ -53,7 +53,9 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var medicine = await medicineRepository.GetMedicineById(id);
-            return View(mapper.Map<CreateMedicineModel>(medicine));
+            ViewData["id"] = id;
+
+			return View(mapper.Map<CreateMedicineModel>(medicine));
         }
 
         [HttpPost]
