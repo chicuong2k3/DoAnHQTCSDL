@@ -42,9 +42,10 @@
     </script>
 </head>
 <body>
-    <div class="header">
-        <div class="header-left" style="width: 70%">
-            <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Home" asp-action="Index" class="dropdown-toggle no-arrow">
+    <div class="header" style="height: 80px;">
+            
+        <div class="d-flex flex-row align-items-center row px-3">
+            <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Home" asp-action="Index" class="dropdown-toggle no-arrow">
                 Trang chủ
             </a>
 
@@ -54,106 +55,101 @@
                 if (User.IsInRole("Admin"))
                 {
 
-                    <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Administration" asp-action="ListUsers" class="dropdown-toggle no-arrow">
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Administration" asp-action="ListUsers" class="dropdown-toggle no-arrow">
                         Quản lý User
                     </a>
 
 
-                    <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Medicine" asp-action="Index" class="dropdown-toggle no-arrow">
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Medicine" asp-action="Index" class="dropdown-toggle no-arrow">
                         Quản lý thuốc
                     </a>
 
-                    <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicineInventory" asp-action="Index" class="dropdown-toggle no-arrow">
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="MedicineInventory" asp-action="Index" class="dropdown-toggle no-arrow">
                         Kho thuốc
                     </a>
                 }
 
             }
 
-            <div class="d-flex flex-row align-items-center">
-                @if (SignInManager.IsSignedIn(User))
+            @if (SignInManager.IsSignedIn(User))
+            {
+                if (User.IsInRole("Customer"))
                 {
-                    if (User.IsInRole("Customer"))
-                    {
-                        var customer = await UserManager.GetUserAsync(User);
-                        var customerId = (await CustomerRepository.GetCustomerByAccountAsync(customer)).Id;
-                        <a class="btn btn-info" asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId" style="height: 40px">
-                            Đặt lịch hẹn
-                        </a>
-                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="Schedule" asp-action="GetCustomerSchedules" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
-                            Danh sách lịch hẹn
-                        </a>
-                        <a class="btn btn-secondary d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="MedicalRecordOfCustomer" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
-                            Hồ sơ bệnh án
-                        </a>
-                        <a class="btn btn-secondary d-flex align-items-center mx-3" asp-controller="CustomerCredit" asp-action="Index" asp-route-customerId="@customerId" class="btn btn-info" style="height: 40px">
-                            Nạp tiền
-                        </a>
-                    }
-                    else if (User.IsInRole("Dentist"))
-                    {
-                        var dentist = await UserManager.GetUserAsync(User);
-                        var dentistId = (await DentistRepository.GetDentistByAccountAsync(dentist)).Id;
-                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="Schedule" asp-action="ListAppointmentSchedules" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
-                            Xem danh sách lịch hẹn
-                        </a>
-
-                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="Index" asp-route-dentistId="@dentistId" class="btn btn-info" style="height: 40px">
-                            Hồ sơ bệnh nhân
-                        </a>
-                    }
-                    else if(User.IsInRole("Employee"))
-                    {
-                        <a class="btn btn-success d-flex align-items-center mx-3" asp-controller="MedicalRecord" asp-action="Index" class="btn btn-info" style="height: 40px">
-                            Hồ sơ bệnh nhân
-                        </a>
-                        <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="Index" class="dropdown-toggle no-arrow">
-                            Thanh Toán
-                        </a>
-                        <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Payment" asp-action="CreateSchedule" class="dropdown-toggle no-arrow">
-                            Lập Lịch Khách Hàng
-                        </a>
-                    }
-                }
-                else
-                {
-
-                    <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="" class="btn btn-info" style="height: 40px">
+                    var customer = await UserManager.GetUserAsync(User);
+                    var customerId = (await CustomerRepository.GetCustomerByAccountAsync(customer)).Id;
+                    <a class="btn btn-info d-flex align-items-center mx-2 btn-sm" asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="@customerId">
                         Đặt lịch hẹn
                     </a>
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Schedule" asp-action="GetCustomerSchedules" asp-route-customerId="@customerId">
+                        Danh sách lịch hẹn
+                    </a>
+                    <a class="btn btn-secondary d-flex align-items-center mx-2 btn-sm" asp-controller="MedicalRecord" asp-action="MedicalRecordOfCustomer" asp-route-customerId="@customerId">
+                        Hồ sơ bệnh án
+                    </a>
+                    <a class="btn btn-secondary d-flex align-items-center mx-2 btn-sm" asp-controller="CustomerCredit" asp-action="Index" asp-route-customerId="@customerId" class="btn btn-info">
+                        Nạp tiền
+                    </a>
                 }
-            </div>
-        </div>
-        <div class="header-right" style="width: 30%">
+                else if (User.IsInRole("Dentist"))
+                {
+                    var dentist = await UserManager.GetUserAsync(User);
+                    var dentistId = (await DentistRepository.GetDentistByAccountAsync(dentist)).Id;
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Schedule" asp-action="ListAppointmentSchedules" asp-route-dentistId="@dentistId" class="btn btn-info">
+                        Xem danh sách lịch hẹn
+                    </a>
 
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="MedicalRecord" asp-action="Index" asp-route-dentistId="@dentistId" class="btn btn-info">
+                        Hồ sơ bệnh nhân
+                    </a>
+                }
+                else if (User.IsInRole("Employee"))
+                {
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="MedicalRecord" asp-action="Index" class="btn btn-info">
+                        Hồ sơ bệnh nhân
+                    </a>
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Payment" asp-action="Index" class="dropdown-toggle no-arrow">
+                        Thanh Toán
+                    </a>
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Payment" asp-action="CreateSchedule" class="dropdown-toggle no-arrow">
+                        Lập Lịch Khách Hàng
+                    </a>
+                }
+            }
+            else
+            {
+
+                <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="" class="btn btn-info btn-sm">
+                    Đặt lịch hẹn
+                </a>
+            }
             @if (SignInManager.IsSignedIn(User))
             {
 
-                <div class="d-flex flex-row align-items-center">
-                    
+                
+
                     @if (!User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-primary mx-3" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name">Tài khoản</a>
+                        <a class="btn btn-primary mx-2 btn-sm" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name">Tài khoản</a>
                     }
                     <form asp-controller="Account" asp-action="Logout" method="post">
-                        <button type="submit" class="btn btn-success mx-3">Đăng xuất</button>
+                        <button type="submit" class="btn btn-success mx-2 btn-sm">Đăng xuất</button>
                     </form>
 
-                </div>
+                
 
             }
             else
             {
-                <div class="d-flex flex-row align-items-center">
-                    <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Account" asp-action="Login">
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Account" asp-action="Login">
                         Đăng nhập
                     </a>
-                    <a style="height: 40px" class="btn btn-success d-flex align-items-center mx-3" asp-controller="Account" asp-action="Register">
+                    <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Account" asp-action="Register">
                         Đăng ký
                     </a>
-                </div>
+  
             }
         </div>
+        
     </div>
 
     <div class="mobile-menu-overlay"></div>
@@ -178,8 +174,6 @@
     <script src="~/src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/src/plugins/datatables/js/dataTables.responsive.min.js"></script>
     <script src="~/src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
-    <script src="~/src/plugins/apexcharts/apexcharts.min.js"></script>
-    <script src="~/vendors/scripts/dashboard.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

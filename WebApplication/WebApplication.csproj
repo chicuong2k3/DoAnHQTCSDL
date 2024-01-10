@@ -22,8 +22,6 @@
 	<ItemGroup>
 		<None Include="wwwroot\assets\.DS_Store" />
 		<None Include="wwwroot\assets\fonts\.DS_Store" />
-		<None Include="wwwroot\assets\images\.DS_Store" />
-		<None Include="wwwroot\assets\images\faces\.DS_Store" />
 		<None Include="wwwroot\assets\js\.DS_Store" />
 		<None Include="wwwroot\assets\scss\.DS_Store" />
 		<None Include="wwwroot\assets\scss\components\.DS_Store" />

@@ -34,7 +34,7 @@ namespace Repositories
                 Balance = 1000000,
                 CustomerId = customer.Id,
             };
-            await dbContext.credits.AddAsync(credit);
+            await dbContext.Credits.AddAsync(credit);
             await dbContext.SaveChangesAsync();
         }
 
