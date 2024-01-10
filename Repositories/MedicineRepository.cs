@@ -2,12 +2,13 @@
 using Dapper;
 using DataModels;
 using DataModels.Config;
+using DataModels.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Repositories
 {
-	public class MedicineRepository
+    public class MedicineRepository
     {
         private AppDbContext dbContext;
         private IMapper mapper;

@@ -1,4 +1,4 @@
-﻿using DataModels;
+﻿using DataModels.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-	public class PaymentController : Controller
+    public class PaymentController : Controller
 	{
 		private MedicalRecordRespository medicalRecordRespository;
 		private AppDbContext appDbContext;

@@ -1,12 +1,13 @@
 ﻿using Dapper;
 using DataModels;
 using DataModels.Config;
+using DataModels.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Repositories
 {
-	public class AppointmentScheduleRepository
+    public class AppointmentScheduleRepository
 	{
 		private readonly AppDbContext dbContext;
 		private readonly DapperContext dapperContext;

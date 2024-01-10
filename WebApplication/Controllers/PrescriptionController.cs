@@ -1,10 +1,5 @@
-﻿using DataModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
 using Repositories;
-using System.Collections.Generic;
-using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {

@@ -43,7 +43,7 @@ namespace WebApplication.Controllers
 			return View(items);
         }
 
-		public async Task<IActionResult> OptionEdit(int id,int sn)
+		public IActionResult OptionEdit(int id,int sn)
         {
             ViewBag.id = id;
             ViewBag.sequence = sn;

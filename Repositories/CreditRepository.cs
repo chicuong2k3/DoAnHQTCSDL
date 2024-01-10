@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using DataModels;
 using DataModels.Config;
+using DataModels.DbContexts;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
-	public class CreditRepository
+    public class CreditRepository
 	{
 		private AppDbContext dbContext;
 		private DapperContext dapper;

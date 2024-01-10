@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataModels;
+using DataModels.DbContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-	[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
 	public class MedicineController : Controller
     {
         private AppDbContext dbContext;

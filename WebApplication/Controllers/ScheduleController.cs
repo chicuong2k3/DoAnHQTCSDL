@@ -61,7 +61,7 @@ namespace WebApplication.Controllers
             return Ok(availableDentists);
 		}
 		[Authorize(Roles = "Customer")]
-        public async Task<IActionResult> MakeAppointment(string customerId)
+        public IActionResult MakeAppointment(string customerId)
 		{
 			ViewData["CustomerId"] = customerId;
 			
@@ -153,7 +153,7 @@ namespace WebApplication.Controllers
 
 		[Authorize(Roles = "Dentist")]
 		[HttpGet]
-		public async Task<IActionResult> CreatePersonalSchedule(string dentistId)
+		public IActionResult CreatePersonalSchedule(string dentistId)
 		{
 			ViewData["DentistId"] = dentistId;
 

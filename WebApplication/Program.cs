@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Repositories;
 using WebApplication.Congfig;
 using DataModels.Config;
+using DataModels.DbContexts;
 
 namespace WebApplication
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
