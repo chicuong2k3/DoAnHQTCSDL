@@ -60,7 +60,7 @@ namespace Repositories
 			//	await dbContext.SaveChangesAsync();
 			//}
 
-			int check = 0; //thanh cong
+			int check; //thanh cong
 						   //use procedure 
 						   //UPDATE_QUANTITY_DEADLOCK2
 			var param = new DynamicParameters();
@@ -68,25 +68,17 @@ namespace Repositories
 			//@ID INT, @QUANTITY int
 			param.Add("ID", model.Id);
 			param.Add("QUANTITY", model.InventoryQuantity);
-			using (var connection = dapperContext.CreateConnection())
+            param.Add("@check", direction: ParameterDirection.ReturnValue);
+            using (var connection = dapperContext.CreateConnection())
 			{
 				try
 				{
 					await connection.ExecuteAsync(procedureName, param, commandType: CommandType.StoredProcedure);
+					check = param.Get<int>("@check");
 				}
 				catch (Exception ex)
 				{
-					if (ex.Message.Contains("deadlock"))
-					{
-						await Console.Out.WriteLineAsync("---------=====================----------------");
-						await Console.Out.WriteLineAsync(ex.Message);
-						await Console.Out.WriteLineAsync("---------=====================----------------");
-						check = 1; //deadlock
-					}
-					else
-					{
-						check = 2; //khong tim thay thuoc nay
-					}
+					check = 1;
 				}
 			}
 			return check;
@@ -101,28 +93,22 @@ namespace Repositories
 		{
 			string procName = "DELETE_EXPIRED_MEDICINE_DEADLOCK2";
 			var param = new DynamicParameters();
-			var check = 0; //thanh cong
+			int check;
+			param.Add("@check", direction: ParameterDirection.ReturnValue);
 			using(var connection = dapperContext.CreateConnection())
 			{
 				try
 				{
 					await connection.ExecuteAsync(procName, param, 
 						commandType : CommandType.StoredProcedure);
+					check = param.Get<int>("@check");
 				}
 				catch(Exception ex)
 				{
                     await Console.Out.WriteLineAsync("---------------------================-----------------");
                     await Console.Out.WriteLineAsync(ex.Message);
                     await Console.Out.WriteLineAsync("---------------------================-----------------");
-					if (ex.Message.Contains("deadlock"))
-					{
-						check = 1; //deadlock
-					}
-					else
-					{
-						//loi khac
-						check = 2;
-					}
+					check = 1;
 				}
 			}
 			return check;

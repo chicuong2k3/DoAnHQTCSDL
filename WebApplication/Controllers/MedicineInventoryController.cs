@@ -77,8 +77,15 @@ namespace WebApplication.Controllers
 			if(ModelState.IsValid)
 			{
 				var result = await medicineInventoryRepository.Update(mapper.Map<MedicineInventory>(model));
-
-				return Redirect("/MedicineInventory/Index");
+                if (result == 1)
+                {
+                    TempData["Err"] = "Cập nhật số lượng thuốc thất bại vì xảy ra deadlock";
+                }
+                else
+                {
+                    TempData["Success"] = "Cập nhật số lượng thuốc hết hạn thành công";
+                }
+                return Redirect("/MedicineInventory/Index");
 			}
 			return View(model);
 		}
@@ -86,6 +93,14 @@ namespace WebApplication.Controllers
 		public async Task<IActionResult> DeleteAllExpirededicine()
 		{
 			var result = await medicineInventoryRepository.DeleteAllExpirededicine();
+			if (result == 1)
+			{
+				TempData["Err"] = "Xóa thuốc hết hạn thất bại vì xảy ra deadlock";
+			}
+			else
+			{
+				TempData["Success"] = "Xóa thuốc hết hạn thành công";
+			}
 			return Redirect("/MedicineInventory/Index");
 		}
 		[HttpPost]

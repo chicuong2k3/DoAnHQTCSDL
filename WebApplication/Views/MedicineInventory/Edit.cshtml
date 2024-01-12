@@ -2,20 +2,20 @@
 @model MedicineInventory
 
 @{
-    ViewData["Title"] = "Create New Medicine Invectory";
+    ViewData["Title"] = "Sửa thuốc trong kho";
 }
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Edit MedicineInventory</h4>
+                <h4 class="card-title">Sửa thuốc trong kho</h4>
                 <div class="text-danger" asp-validation-summary="All"></div>
                 <form method="post">
                     <div class="form-group mb-3">
-                        <label class="form-control-label" asp-for="Id"></label>
-                        <input class="form-control" asp-for="Id" value = "@Model.Id">
-                        <span class="form-control-feedback text-danger" asp-validation-for="Id"></span>
+
+                        <input type="hidden" class="form-control" asp-for="Id" value = "@Model.Id">
+                        
                     </div>
                     <div class="form-group mb-3">
                         <label class="form-control-label" asp-for="MedicineId"></label>

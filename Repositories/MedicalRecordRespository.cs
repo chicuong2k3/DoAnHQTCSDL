@@ -108,12 +108,15 @@ namespace Repositories
 			param.Add("idNhaSiTao", model.CreatedByDentistId, DbType.String);
 			param.Add("idNhaSiKham", model.ExamDentistId, DbType.String);
 			SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
+            int kq;
+			param.Add("@kq", direction: ParameterDirection.ReturnValue);
 			using (var connection = dapperContext.CreateConnection())
 			{
 				try
 				{
 					await connection
 						.ExecuteAsync(procedureName, param, commandType: CommandType.StoredProcedure);
+                    kq = param.Get<int>("@kq");
 				}
 				catch (Exception ex)
 				{
@@ -128,15 +131,6 @@ namespace Repositories
 
         public async Task<int> Delete(int id, int sequence)
         {
-			//var target = await dbContext.MedicalRecords.Where(mr => (mr.Id == id && mr.SequenceNumber == sequence))
-			//    .FirstOrDefaultAsync();
-			//if(target != null)
-			//{
-			//    dbContext.MedicalRecords.Remove(target);
-			//    await dbContext.SaveChangesAsync();
-			//    return 1;
-			//}
-			//return 0;
 			List<MedicalRecord> result = new List<MedicalRecord>();
 			var param = new DynamicParameters();
 			string procedureName = "DELETE_RECORD";
@@ -171,10 +165,11 @@ namespace Repositories
             param.Add("lankham", model.SequenceNumber, DbType.Int32);
             param.Add("date_time", model.ExaminationDate, DbType.Date);
             param.Add("dichvu", model.Service, DbType.String);
+            param.Add("giadichvu", model.ServicePrice, DbType.Decimal);
             param.Add("idCustomer", model.CustomerId, DbType.String);
             param.Add("idBsTao", model.CreatedByDentistId, DbType.String);
             param.Add("idBsKT", model.ExamDentistId, DbType.String);
-            param.Add("kq", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            param.Add("kq", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
             SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
             using (var connection = dapperContext.CreateConnection())
             {
@@ -210,46 +205,10 @@ namespace Repositories
 
         public async Task<MedicalRecord?> GetMaxId()
         {
-            var target = await dbContext.MedicalRecords.OrderBy(m => m.Id).FirstOrDefaultAsync();
+            var target = await dbContext.MedicalRecords.OrderByDescending(m => m.Id).FirstOrDefaultAsync();
             return target;
         }
 
-        public async Task<int> UpdateService(int id, int sequence, decimal deltaPrice)
-        {
-            var param = new DynamicParameters();
-            param.Add("Id", id);
-            param.Add("Sequence", sequence);
-            param.Add("price", Math.Abs(deltaPrice));
-
-            int result = 1;
-            try
-            {
-                string nameProc = "";
-                if(deltaPrice > 0)
-                {
-                    nameProc = "sp_IncreaseServicePrice";
-                }
-                else if(deltaPrice < 0)
-                {
-                    nameProc = "sp_DecreaseServicePrice";
-                }
-                else
-                {
-                    return result;
-                }
-                using(var connection = dapperContext.CreateConnection())
-                {
-                    await connection.ExecuteAsync(nameProc, param, commandType: CommandType.StoredProcedure);
-                }
-            }
-            catch(Exception ex)
-            {
-                await Console.Out.WriteLineAsync("================<>=========================");
-                await Console.Out.WriteLineAsync(ex.Message);
-                await Console.Out.WriteLineAsync("================<>=========================");
-                result = 0; //fail
-            }
-            return result;
-        }
+       
     }
 }

@@ -113,4 +113,16 @@
 			}
 		});
 	</script>
+	@if (TempData["Err"] != null)
+	{
+		<script>
+			toastr.error('@TempData["Err"]', { timeOut: 2000 });
+		</script>
+	}
+	@if (TempData["Success"] != null)
+	{
+		<script>
+			toastr.success('@TempData["Success"]', { timeOut: 2000 });
+		</script>
+	}
 }

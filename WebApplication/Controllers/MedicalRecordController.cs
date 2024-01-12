@@ -43,57 +43,6 @@ namespace WebApplication.Controllers
 			return View(items);
         }
 
-		public IActionResult OptionEdit(int id,int sn)
-        {
-            ViewBag.id = id;
-            ViewBag.sequence = sn;
-            return View();
-        }
-
-		public IActionResult EditServicePrice(int id,int sn)
-        {
-            var selection = new List<SelectListItem>()
-            {
-                new SelectListItem()
-                {
-                    Value = "200000",
-                    Text = "Cao cap"
-                },
-                new SelectListItem()
-                {
-                    Value = "100000",
-                    Text = "Toan dien"
-                },
-                new SelectListItem()
-                {
-                    Value = "50000",
-                    Text = "Thong thuong"
-                }
-            };
-            ViewBag.selection = selection; 
-            ViewBag.id = id;
-            ViewBag.sequence = sn;
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditServicePrice(EditServicePriceModel model)
-        {
-            if(ModelState.IsValid)
-            {
-                var target = await medicalRecordRespository.GetById(model.Id, model.Sequence);
-                if(target == null)
-                {
-                    ModelState.AddModelError(String.Empty,"Không tồn tại bệnh án");
-                    return View(model);
-                }
-                decimal deltaPrice = model.Price - target.ServicePrice;
-                await medicalRecordRespository.UpdateService(model.Id, model.Sequence, deltaPrice);
-                return Redirect($"/MedicalRecord/Index?dentistId={target.ExamDentistId}");
-            }
-            return View(model);
-        }
-
 		public async Task<IActionResult> MedicalRecordOfCustomer(string customerId)
         {
             
@@ -173,7 +122,7 @@ namespace WebApplication.Controllers
             ViewBag.SelectService = new List<SelectListItem>()
             {
                 new SelectListItem() {Text = "Khám tổng quát", Value = "Khám tổng quát"},
-                new SelectListItem() {Text = "Nội soi", Value = "Nột soi"},
+                new SelectListItem() {Text = "Nội soi", Value = "Nội soi"},
                 new SelectListItem() {Text = "Siêu âm", Value = "Siêu âm"}
             };
 
@@ -251,9 +200,13 @@ namespace WebApplication.Controllers
             if(ModelState.IsValid)
             {
                 var res = await medicalRecordRespository.Edit(mapper.Map<MedicalRecord>(model));
-                if (res == 0)
+                if (res == 1)
                 {
                     TempData["Err"] = "Có lỗi xảy ra! Cập nhật hồ sơ thất bại";
+                }
+                else
+                {
+                    TempData["Success"] = "Cập nhật hồ sơ thành công";
                 }
                 return Redirect($"/MedicalRecord/Index?dentistId={oldDentistId}");
 			}

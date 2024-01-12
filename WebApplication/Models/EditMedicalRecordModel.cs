@@ -13,7 +13,8 @@ namespace WebApplication.Models
 		public DateTime ExaminationDate { get; set; }
         [Display(Name = "Dịch vụ")]
         public string Service { get; set; }
-		public decimal ServicePrice { get; set; } = 1200;
+        [Display(Name = "Giá dịch vụ")]
+        public decimal ServicePrice { get; set; }
         [Display(Name = "Bệnh nhân")]
         public string CustomerId { get; set; }
         [Display(Name = "Nha sĩ tạo")]

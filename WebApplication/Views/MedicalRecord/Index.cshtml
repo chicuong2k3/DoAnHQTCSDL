@@ -100,7 +100,7 @@
 					{
 						
 							<a class="btn btn-warning text-light"
-							   href="/MedicalRecord/OptionEdit?id=@item.Id&sn=@item.SequenceNumber">
+							   href="/MedicalRecord/Edit?id=@item.Id&sn=@item.SequenceNumber">
 								<i class="icon-copy fa fa-edit" aria-hidden="true"></i>	
 							</a>
 							<button data-id="@item.Id" data-sequence="@item.SequenceNumber" type="button" class="btn btn-danger text-light delete-confirm-btn">
@@ -185,6 +185,12 @@
 	{
 		<script>
 			toastr.error('@TempData["Err"]', { timeOut: 2000 });
+		</script>
+	}
+	@if (TempData["Success"] != null)
+	{
+		<script>
+			toastr.success('@TempData["Success"]', { timeOut: 2000 });
 		</script>
 	}
 }

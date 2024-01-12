@@ -60,7 +60,7 @@ namespace Repositories
 			param.Add("IdBN", appointment.CustomerId, DbType.String);
 			param.Add("batdau", appointment.StartTime, DbType.DateTime);
 			param.Add("ketthuc", appointment.EndTime, DbType.DateTime);
-			param.Add("ketqua", dbType: DbType.Int32, direction: ParameterDirection.Output);
+			param.Add("ketqua", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 			SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
 			using (var connection = dapperContext.CreateConnection())
 			{

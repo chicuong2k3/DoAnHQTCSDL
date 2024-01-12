@@ -44,15 +44,19 @@ namespace WebApplication.Controllers
 			{
 				bool isAvailable = true;
                 var schedules = await appointmentScheduleRepository.GetAppointmentsOfDentist(dentist.Id);
-				foreach (var schedule in schedules)
+				if (schedules != null)
 				{
-					if ((sTime >= schedule.StartTime && sTime <= schedule.EndTime)
-						|| (eTime >= schedule.StartTime && eTime <= schedule.EndTime))
+					foreach (var schedule in schedules)
 					{
-						isAvailable = false;
-						break;
-                    }
+						if ((sTime >= schedule.StartTime && sTime <= schedule.EndTime)
+							|| (eTime >= schedule.StartTime && eTime <= schedule.EndTime))
+						{
+							isAvailable = false;
+							break;
+						}
+					}
 				}
+				
 				if (isAvailable)
 				{
 					availableDentists.Add(dentist);
@@ -99,12 +103,16 @@ namespace WebApplication.Controllers
 				appointment.EndTime = eTime;
 
                 var res = await appointmentScheduleRepository.AddAppoinment(appointment);
-				if (res == 0)
+				if (res != 0)
 				{
 					TempData["Err"] = "Có lỗi xảy ra. Thêm lịch hẹn thất bại";
 					
 				}
-				return RedirectToAction("Index", "Home");
+				else
+				{
+					TempData["Success"] = "Thêm lịch hẹn thành công";
+				}
+				return RedirectToAction("GetCustomerSchedules", new { customerId = appointment.CustomerId });
 			}
             
             return View("ReviewAppointment", model);
