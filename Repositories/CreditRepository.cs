@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DataModels.Config;
 using DataModels.DbContexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,14 @@ namespace Repositories
                     await Console.Out.WriteLineAsync(ex.Message);
                 }
 			}
+		}
+
+		public async Task<decimal> GetBalance(string customerId)
+		{
+			var wallet = await dbContext.Credits
+				.Where(x => x.CustomerId == customerId)
+				.SingleOrDefaultAsync();
+			return wallet.Balance;
 		}
 	}
 }

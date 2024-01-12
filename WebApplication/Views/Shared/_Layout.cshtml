@@ -4,6 +4,7 @@
 @inject UserManager<AppUser> UserManager
 @inject Repositories.CustomerRepository CustomerRepository
 @inject Repositories.DentistRepository DentistRepository
+@inject Repositories.CreditRepository CreditRepository
 
 <!DOCTYPE html>
 <html>
@@ -124,9 +125,6 @@
             }
             @if (SignInManager.IsSignedIn(User))
             {
-
-                
-
                     @if (!User.IsInRole("Admin"))
                     {
                         <a class="btn btn-primary mx-2 btn-sm" asp-controller="Account" asp-action="EditProfile" asp-route-username="@User.Identity.Name">Tài khoản</a>
@@ -134,9 +132,14 @@
                     <form asp-controller="Account" asp-action="Logout" method="post">
                         <button type="submit" class="btn btn-success mx-2 btn-sm">Đăng xuất</button>
                     </form>
-
-                
-
+                    @if (User.IsInRole("Customer"))
+                    {
+                        var customer = await UserManager.GetUserAsync(User);
+                        var customerId = (await CustomerRepository.GetCustomerByAccountAsync(customer)).Id;
+                        var balance = await CreditRepository.GetBalance(customerId);
+                        <div class="badge bg-warning">Số dư: @balance.ToString("#,##0") VNĐ</div>
+                    }
+  
             }
             else
             {
@@ -146,7 +149,7 @@
                     <a class="btn btn-success d-flex align-items-center mx-2 btn-sm" asp-controller="Account" asp-action="Register">
                         Đăng ký
                     </a>
-  
+                    
             }
         </div>
         
