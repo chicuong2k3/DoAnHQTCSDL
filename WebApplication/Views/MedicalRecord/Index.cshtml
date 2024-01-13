@@ -1,4 +1,4 @@
-﻿@using DataModels;
+﻿	@using DataModels;
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> UserManager
 @inject Repositories.DentistRepository DentistRepository
@@ -86,7 +86,7 @@
 						}
 					</td>
 					<td>
-						@if (!(await UserManager.IsInRoleAsync(AccountDentist, "Customer")))
+						@if (await UserManager.IsInRoleAsync(AccountDentist, "Dentist"))
 						{
 							<a class="btn btn-warning text-light"
 							   href="/Prescription/Index?id=@item.Id&sequence=@item.SequenceNumber">
