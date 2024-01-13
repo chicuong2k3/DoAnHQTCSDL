@@ -3,9 +3,7 @@ using DataModels;
 using DataModels.Config;
 using DataModels.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Data;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Repositories
 {
@@ -61,8 +59,28 @@ namespace Repositories
 
         public async Task<MedicalRecord?> GetById(int id, int sn)
         {
-            var result = await dbContext.MedicalRecords.
-                Where(mr => mr.Id == id && mr.SequenceNumber == sn).SingleOrDefaultAsync();
+            MedicalRecord result = null;
+            var param = new DynamicParameters();
+            string procedureName = "EMPLOYEE_SEE_RECORD";
+            param.Add("id", id);
+            param.Add("lankham", sn);
+            SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
+            using (var connection = dapperContext.CreateConnection())
+            {
+                try
+                {
+                    var records = await connection
+                        .QueryAsync<MedicalRecord>(procedureName, param, commandType: CommandType.StoredProcedure);
+                    result = records.SingleOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    await Console.Out.WriteLineAsync("---------=====================----------------");
+                    await Console.Out.WriteLineAsync(ex.Message);
+                    await Console.Out.WriteLineAsync("---------=====================----------------");
+                    return null;
+                }
+            }
             return result;
         }
 

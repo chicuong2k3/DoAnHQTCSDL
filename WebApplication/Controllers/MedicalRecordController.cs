@@ -59,7 +59,7 @@ namespace WebApplication.Controllers
             ViewBag.SelectService = new List<SelectListItem>()
             {
                 new SelectListItem() {Text = "Khám tổng quát", Value = "Khám tổng quát"},
-                new SelectListItem() {Text = "Nội soi", Value = "Nột soi"},
+                new SelectListItem() {Text = "Nội soi", Value = "Nội soi"},
                 new SelectListItem() {Text = "Siêu âm", Value = "Siêu âm"}
             };
 
