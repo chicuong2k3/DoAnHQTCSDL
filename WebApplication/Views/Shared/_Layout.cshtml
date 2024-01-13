@@ -116,13 +116,7 @@
                     </a>
                 }
             }
-            else
-            {
-
-                <a asp-controller="Schedule" asp-action="MakeAppointment" asp-route-customerId="" class="btn btn-info btn-sm">
-                    Đặt lịch hẹn
-                </a>
-            }
+            
             @if (SignInManager.IsSignedIn(User))
             {
                     @if (!User.IsInRole("Admin"))

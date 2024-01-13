@@ -31,7 +31,7 @@ namespace Repositories
             await dbContext.Customers.AddAsync(customer);
             var credit = new Credit()
             {
-                Balance = 1000000,
+                Balance = 0,
                 CustomerId = customer.Id,
             };
             await dbContext.Credits.AddAsync(credit);
